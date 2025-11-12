@@ -1,6 +1,10 @@
+    // [이것이 Galaxy.jsx 파일의 최종 수정본 전체 내용입니다]
+
+    // 1. (오류 수정) 'React is not defined' 오류를 막기 위해 React를 import합니다.
+    import React from 'react';
     import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
     import { useEffect, useRef } from 'react';
-    import './Galaxy.css';
+    import './Galaxy.css'; // 2단계에서 수정할 CSS 파일
 
     const vertexShader = `
     attribute vec2 uv;
@@ -83,7 +87,6 @@
 
     vec3 StarLayer(vec2 uv) {
     vec3 col = vec3(0.0);
-
     vec2 gv = fract(uv) - 0.5; 
     vec2 id = floor(uv);
 
@@ -95,38 +98,30 @@
         float size = fract(seed * 345.32);
         float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
         float flareSize = smoothstep(0.9, 1.0, size) * glossLocal;
-
         float red = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 1.0)) + STAR_COLOR_CUTOFF;
         float blu = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 3.0)) + STAR_COLOR_CUTOFF;
         float grn = min(red, blu) * seed;
         vec3 base = vec3(red, grn, blu);
-        
         float hue = atan(base.g - base.r, base.b - base.r) / (2.0 * 3.14159) + 0.5;
         hue = fract(hue + uHueShift / 360.0);
         float sat = length(base - vec3(dot(base, vec3(0.299, 0.587, 0.114)))) * uSaturation;
         float val = max(max(base.r, base.g), base.b);
         base = hsv2rgb(vec3(hue, sat, val));
-
         vec2 pad = vec2(tris(seed * 34.0 + uTime * uSpeed / 10.0), tris(seed * 38.0 + uTime * uSpeed / 30.0)) - 0.5;
-
         float star = Star(gv - offset - pad, flareSize);
         vec3 color = base;
-
         float twinkle = trisn(uTime * uSpeed + seed * 6.2831) * 0.5 + 1.0;
         twinkle = mix(1.0, twinkle, uTwinkleIntensity);
         star *= twinkle;
-        
         col += star * size * color;
         }
     }
-
     return col;
     }
 
     void main() {
     vec2 focalPx = uFocal * uResolution.xy;
     vec2 uv = (vUv * uResolution.xy - focalPx) / uResolution.y;
-
     vec2 mouseNorm = uMouse - vec2(0.5);
     
     if (uAutoCenterRepulsion > 0.0) {
@@ -147,9 +142,7 @@
     float autoRotAngle = uTime * uRotationSpeed;
     mat2 autoRot = mat2(cos(autoRotAngle), -sin(autoRotAngle), sin(autoRotAngle), cos(autoRotAngle));
     uv = autoRot * uv;
-
     uv = mat2(uRotation.x, -uRotation.y, uRotation.y, uRotation.x) * uv;
-
     vec3 col = vec3(0.0);
 
     for (float i = 0.0; i < 1.0; i += 1.0 / NUM_LAYER) {
@@ -225,6 +218,7 @@
             );
         }
         }
+        // 3. (오류 수정) 'resize' 이벤트도 'window'에서 감지
         window.addEventListener('resize', resize, false);
         resize();
 
@@ -271,7 +265,6 @@
         const lerpFactor = 0.05;
         smoothMousePos.current.x += (targetMousePos.current.x - smoothMousePos.current.x) * lerpFactor;
         smoothMousePos.current.y += (targetMousePos.current.y - smoothMousePos.current.y) * lerpFactor;
-
         smoothMouseActive.current += (targetMouseActive.current - smoothMouseActive.current) * lerpFactor;
 
         program.uniforms.uMouse.value[0] = smoothMousePos.current.x;
@@ -283,10 +276,11 @@
         animateId = requestAnimationFrame(update);
         ctn.appendChild(gl.canvas);
 
+        // 2. (오류 수정) 마우스 위치 계산 방식을 'window' 기준으로 변경
         function handleMouseMove(e) {
-        const rect = ctn.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = 1.0 - (e.clientY - rect.top) / rect.height;
+        // const rect = ctn.getBoundingClientRect(); // 이 줄을 지웁니다.
+        const x = e.clientX / window.innerWidth;
+        const y = 1.0 - (e.clientY / window.innerHeight);
         targetMousePos.current = { x, y };
         targetMouseActive.current = 1.0;
         }
@@ -295,17 +289,19 @@
         targetMouseActive.current = 0.0;
         }
 
+        // 3. (오류 수정) 'ctn' 대신 'window'가 마우스 이벤트를 감지
         if (mouseInteraction) {
-        ctn.addEventListener('mousemove', handleMouseMove);
-        ctn.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseleave', handleMouseLeave);
         }
 
+        // 4. (오류 수정) 'ctn' 대신 'window'에서 이벤트를 제거
         return () => {
         cancelAnimationFrame(animateId);
         window.removeEventListener('resize', resize);
         if (mouseInteraction) {
-            ctn.removeEventListener('mousemove', handleMouseMove);
-            ctn.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseleave', handleMouseLeave);
         }
         ctn.removeChild(gl.canvas);
         gl.getExtension('WEBGL_lose_context')?.loseContext();

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Web Showcase</title>
+    <style>
+        /* 1. CSS 변수 및 기본 페이지 설정 */
+        :root {
+            --bg-color: #0c0b10;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --card-width: 520px;
+            --card-height: 335px;
+            --stack-perspective: 2000px;
+            --animation-duration: 1.2s;
+            --animation-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        /* 2. 메인 컨테이너 (좌: 텍스트, 우: 카드 스택) */
+        .showcase-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1280px;
+            gap: 4rem;
+        }
+
+        /* 3. 왼쪽 텍스트 영역 */
+        .showcase-text {
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .showcase-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+
+        .showcase-text p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 420px;
+        }
+
+        /* 4. 오른쪽 웹페이지 스택 컨테이너 */
+        .website-stack-container {
+            flex: 1.2;
+            height: calc(var(--card-height) + 150px);
+            position: relative;
+            perspective: var(--stack-perspective);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 5. 개별 웹페이지 카드 스타일 */
+        .website-card {
+            position: absolute;
+            width: var(--card-width);
+            height: var(--card-height);
+            border-radius: 18px;
+            overflow: hidden;
+            background: rgba(28, 26, 38, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            transform-origin: center;
+            transition: transform var(--animation-duration) var(--animation-ease),
+                        opacity calc(var(--animation-duration) / 2) ease;
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+        }
+
+        /* 6. 카드 헤더 (macOS 창 시뮬레이션) */
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .window-dots { display: flex; gap: 0.5rem; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        /* 7. 카드 본문 (이미지 컨테이너) */
+        .card-body {
+            width: 100%;
+            height: calc(100% - 38px);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+
+        /* 8. 반응형 디자인 */
+        @media (max-width: 1100px) {
+            .showcase-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 5rem;
+            }
+            .showcase-text p { margin: 0 auto; }
+        }
+        @media (max-width: 600px) {
+            :root {
+                --card-width: 90vw;
+                --card-height: 58vw;
+            }
+            .showcase-text h1 { font-size: 2.5rem; }
+            .showcase-text p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="showcase-container">
+        <div class="showcase-text">
+            <h1>Web Experience, Elevated.</h1>
+            <p>Seamlessly flowing, visually captivating. Discover a fluid, interactive showcase built for the modern web.</p>
+        </div>
+
+        <div class="website-stack-container">
+            <!-- 이미지 교체: <img class="card-image" src="이미지_주소"> -->
+            <div class="website-card">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80" alt="Abstract design 1"></div>
+            </div>
+            <div class="website-card">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Abstract design 2"></div>
+            </div>
+            <div class="website-card">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&q=80" alt="Abstract design 3"></div>
+            </div>
+            <div class="website-card">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1507202151035-c63d5dfe5b4a?w=1200&q=80" alt="Abstract design 4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = Array.from(document.querySelectorAll('.website-card'));
+            let order = Array.from({ length: cards.length }, (_, i) => i);
+            let isAnimating = false;
+            const AUTO_SWAP_INTERVAL = 4000;
+
+            function updateCardPositions(immediate = false) {
+                order.forEach((cardIndex, stackPosition) => {
+                    const card = cards[cardIndex];
+                    if (!card) return;
+
+                    const isVisible = stackPosition < 3;
+                    const scale = 1 - stackPosition * 0.15;
+                    const y = -stackPosition * 50;
+                    const z = -stackPosition * 120;
+
+                    card.style.transform = `translate3d(0px, ${y}px, ${z}px) scale(${scale})`;
+                    card.style.zIndex = cards.length - stackPosition;
+                    card.style.opacity = isVisible ? '1' : '0';
+                    if (immediate) {
+                        card.style.transition = 'none';
+                    } else {
+                        card.style.transition = `
+                            transform var(--animation-duration) var(--animation-ease),
+                            opacity calc(var(--animation-duration) / 2) ease`;
+                    }
+                });
+
+                if (immediate) {
+                    void cards[0].offsetHeight;
+                    cards.forEach(card => {
+                        card.style.transition = `
+                            transform var(--animation-duration) var(--animation-ease),
+                            opacity calc(var(--animation-duration) / 2) ease`;
+                    });
+                }
+            }
+
+            function swapAnimation() {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                const frontCardIndex = order[0];
+                const frontCard = cards[frontCardIndex];
+
+                // 1. ▼▼▼ 모션 변경 부분 ▼▼▼
+                // 맨 앞 카드를 아래 방향으로 떨어뜨리는 애니메이션으로 수정
+                frontCard.style.transform = `translate3d(0, 150%, -200px) rotate(10deg)`;
+                // ▲▲▲ 모션 변경 부분 ▲▲▲
+                
+                frontCard.style.opacity = '0';
+                
+                const newOrder = [...order.slice(1)];
+                newOrder.forEach((cardIndex, stackPosition) => {
+                    const card = cards[cardIndex];
+                    const scale = 1 - stackPosition * 0.15;
+                    const y = -stackPosition * 50;
+                    const z = -stackPosition * 120;
+                    card.style.transform = `translate3d(0px, ${y}px, ${z}px) scale(${scale})`;
+                    card.style.zIndex = cards.length - stackPosition;
+                    card.style.opacity = stackPosition < 3 ? '1' : '0';
+                });
+
+                setTimeout(() => {
+                    order.push(order.shift());
+                    updateCardPositions(true);
+                    isAnimating = false;
+                }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 1000);
+            }
+
+            updateCardPositions(true);
+            setInterval(swapAnimation, AUTO_SWAP_INTERVAL);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro Page</title>
+    <style>
+        /* 1. CSS 변수 및 기본 페이지 설정 */
+        :root {
+            --bg-color: #101726;
+            --text-primary: #f5f5f7;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;600&display=swap'); /* [추가] 텍스트 애니메이션용 폰트 */
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* 스크롤 방지 */
+            /* [추가] 콘텐츠를 화면 중앙에 배치하기 위한 flex 속성 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- 메뉴 바를 위한 Header 스타일 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+            pointer-events: none;
+        }
+
+        /* --- 메뉴 바 스타일 --- */
+        .nav-container {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px 32px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: 0.3s ease;
+        }
+
+        .logo {
+            width: 60px;
+            height: 40px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+
+        .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        
+        .menu-item.is-animating .word-shifter {
+            transform: translateY(-30px);
+        }
+
+        .visible-word, .hidden-word {
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            height: 30px;
+            white-space: nowrap;
+        }
+
+        .circle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .circle-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-container:hover { transform: scale(1.03); }
+
+        /* [추가] 중앙 텍스트 스타일 */
+        .intro-container h1 {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        /* [추가] 자막 텍스트 애니메이션 스타일 */
+        .subtitle-line {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 1.95rem; /* [수정] 1.3배 키움 */
+            font-weight: 200;
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flipper {
+            position: relative;
+            height: 39px; /* [수정] 1.3배 키움 */
+            overflow: hidden;
+            font-weight: 600; /* 강조되는 단어만 굵게 */
+        }
+
+        .flipper .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .flipper.is-animating .word-shifter {
+            transform: translateY(-39px); /* [수정] 1.3배 키움 */
+        }
+
+        /* [추가] 자막 애니메이션 내부 단어 높이 조정 */
+        .flipper .visible-word,
+        .flipper .hidden-word {
+            height: 39px;
+        }
+
+        /* [추가] 하단 버튼 스타일 */
+        .button-container {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: center; /* [추가] 버튼을 중앙에 정렬 */
+            gap: 1.5rem;
+        }
+
+        .action-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 12px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--text-primary);
+            color: var(--bg-color);
+        }
+
+        /* [추가] 배경 이미지 스타일 */
+        .background-image {
+            position: fixed;
+            top: 50%;
+            left: 53%;
+            transform: translate(-50%, -50%);
+            width: 500%; /* <<< 이 값을 조절하여 이미지 크기를 변경할 수 있습니다 (예: 50%, 1000px) */
+            height: auto; /* 너비에 맞춰 높이는 자동으로 조절됩니다 */
+            max-height: 150vh; /* 화면보다 너무 커지는 것을 방지 */
+            object-fit: contain;
+            z-index: -1; /* 텍스트보다는 뒤, 파티클보다는 앞에 위치 */
+            opacity: 0.3; /* 이미지가 너무 튀지 않도록 투명도 조절 */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 스파클 배경 효과를 위한 Canvas -->
+    <canvas id="sparkle-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;"></canvas>
+
+    <img src="img/PP.png" class="background-image" alt="Background">
+    <!-- 메뉴 바 HTML -->
+    <header>
+        <div class="nav-container">
+            <img src="img/logo.png" alt="Logo" class="logo">
+            <div class="menu">
+                <div class="menu-item" id="menu-welcome">
+                    <div class="word-shifter">
+                        <div class="visible-word">WELCOME</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-project">
+                    <div class="word-shifter">
+                        <div class="visible-word">PROJECT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-contact">
+                    <div class="word-shifter">
+                        <div class="visible-word">CONTACT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="circle-btn">≡</div>
+        </div>
+    </header>
+
+    <!-- [추가] 메인 콘텐츠 컨테이너 및 H1 태그 -->
+    <main class="intro-container">
+        <h1> "관찰을 낯설게, 공감으로 어울리게" </h1>
+        <!-- [추가] 자막 텍스트 애니메이션 HTML -->
+        <div class="subtitle-line">
+            <span>저는</span>
+            <div class="flipper" id="subtitle-flipper">
+                <div class="word-shifter">
+                    <div class="visible-word"></div>
+                    <div class="hidden-word"></div>
+                </div>
+            </div>
+            <span>입니다.</span>
+        </div>
+        <!-- [추가] 하단 버튼 HTML -->
+        <div class="button-container">
+            <a href="index_main.html" class="action-btn">GET IN</a>
+            <a href="#" class="action-btn">CONTACT</a>
+        </div>
+    </main>
+
+    <script>
+        // --- 스파클 배경 애니메이션 스크립트 ---
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+        let particles = [];
+        const numParticles = 800;
+        const particleColors = ['#FFFFFF', '#E0F7FA', '#D1C4E9', '#BBDEFB', '#A7C7E7'];
+        const mouse = { x: undefined, y: undefined, radius: 100 };
+        class Particle {
+            constructor() {
+                this.baseX = Math.random() * width; this.baseY = Math.random() * height;
+                this.x = this.baseX; this.y = this.baseY;
+                this.size = Math.random() * 2.5 + 0.2;
+                this.speedX = 0; this.speedY = 0;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.density = (Math.random() * 30) + 1;
+                this.baseShadowBlur = Math.random() * 5 + 2; this.shadowBlur = this.baseShadowBlur;
+            }
+            update() {
+                const dx = mouse.x - this.x; const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const forceDirectionX = dx / distance; const forceDirectionY = dy / distance;
+                const maxDistance = mouse.radius; const force = (maxDistance - distance) / maxDistance;
+                let targetShadowBlur = this.baseShadowBlur;
+                if (distance < mouse.radius) {
+                    this.speedX -= forceDirectionX * force * 0.1 * this.density;
+                    this.speedY -= forceDirectionY * force * 0.1 * this.density;
+                    const proximity = 1 - (distance / mouse.radius);
+                    targetShadowBlur = this.baseShadowBlur + proximity * 15;
+                }
+                this.shadowBlur += (targetShadowBlur - this.shadowBlur) * 0.1;
+                this.speedX += (this.baseX - this.x) * 0.01; this.speedY += (this.baseY - this.y) * 0.01;
+                this.speedX *= 0.95; this.speedY *= 0.95;
+                this.x += this.speedX; this.y += this.speedY;
+            }
+            draw() {
+                ctx.save(); ctx.shadowColor = 'white'; ctx.shadowBlur = this.shadowBlur;
+                ctx.fillStyle = this.color; ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            }
+        }
+        function handleParticles() { for (const particle of particles) { particle.update(); particle.draw(); } }
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        function initParticles() { for (let i = 0; i < numParticles; i++) { particles.push(new Particle()); } }
+        function animateParticles() { ctx.clearRect(0, 0, width, height); handleParticles(); requestAnimationFrame(animateParticles); }
+        initParticles(); animateParticles();
+
+        // --- 메뉴 바 애니메이션 스크립트 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const slideDuration = 600;
+            const welcomeWords = ['WELCOME', '안녕하세요', 'WELCOME', '환영합니다'];
+            const projectWords = ['PROJECT', 'WORK', 'PROJECT', 'PRODUCT'];
+            const contactWords = ['CONTACT', 'CALLME', 'CONTACT', 'TOUCH'];
+            function setupHoverAnimation(elementId, words) {
+                const menuItem = document.getElementById(elementId);
+                if (!menuItem) return;
+                const shifter = menuItem.querySelector('.word-shifter');
+                const visibleWord = menuItem.querySelector('.visible-word');
+                const hiddenWord = menuItem.querySelector('.hidden-word');
+                let currentIndex = 0; let isAnimating = false;
+                hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                menuItem.addEventListener('mouseenter', () => {
+                    if (isAnimating) return;
+                    isAnimating = true; menuItem.classList.add('is-animating');
+                    setTimeout(() => {
+                        currentIndex = (currentIndex + 1) % words.length;
+                        shifter.style.transition = 'none';
+                        visibleWord.textContent = words[currentIndex];
+                        menuItem.classList.remove('is-animating');
+                        hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                        setTimeout(() => { shifter.style.transition = ''; isAnimating = false; }, 50);
+                    }, slideDuration);
+                });
+            }
+            setupHoverAnimation('menu-welcome', welcomeWords);
+            setupHoverAnimation('menu-project', projectWords);
+            setupHoverAnimation('menu-contact', contactWords);
+
+            // --- [추가] 자막 텍스트 자동 애니메이션 스크립트 ---
+            const subtitleWords = ['김혜민', 'PRODUCT DESIGNER'];
+            const subtitleFlipper = document.getElementById('subtitle-flipper');
+            const subtitleShifter = subtitleFlipper.querySelector('.word-shifter');
+            const subtitleVisible = subtitleFlipper.querySelector('.visible-word');
+            const subtitleHidden = subtitleFlipper.querySelector('.hidden-word');
+            let subtitleIndex = 0;
+
+            function animateSubtitle() {
+                subtitleFlipper.classList.add('is-animating');
+
+                setTimeout(() => {
+                    subtitleIndex = (subtitleIndex + 1) % subtitleWords.length;
+                    subtitleShifter.style.transition = 'none';
+                    subtitleVisible.textContent = subtitleWords[subtitleIndex];
+                    subtitleFlipper.classList.remove('is-animating');
+                    subtitleHidden.textContent = subtitleWords[(subtitleIndex + 1) % subtitleWords.length];
+                    
+                    setTimeout(() => {
+                        subtitleShifter.style.transition = '';
+                    }, 50);
+                }, 600); // CSS transition 시간과 일치
+            }
+            subtitleVisible.textContent = subtitleWords[0];
+            subtitleHidden.textContent = subtitleWords[1];
+            setInterval(animateSubtitle, 2000); // 2초마다 실행
+        });
+    </script>
+</body>
+</html>

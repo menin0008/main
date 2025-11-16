@@ -3,229 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자동 텍스트 슬라이드업 애니메이션 (수정본)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;600&display=swap" rel="stylesheet">
+    <title>Intro Page</title>
     <style>
-        /* 기본 스타일 초기화 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'IBM Plex Sans KR', sans-serif;
+        /* 1. CSS 변수 및 기본 페이지 설정 */
+        :root {
+            --bg-color: #101726;
+            --text-primary: #f5f5f7;
         }
 
-        /* 전체를 감싸는 컨테이너 */
-        .main-container {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;600&display=swap'); /* [추가] 텍스트 애니메이션용 폰트 */
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* 스크롤 방지 */
+            /* [추가] 콘텐츠를 화면 중앙에 배치하기 위한 flex 속성 */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            min-height: 100vh;
-            background-color: #F4F4F4;
-            position: relative;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-        
-        /* 텍스트를 담는 컨테이너 */
-        .text-container {
             text-align: center;
         }
 
-        /* 각 텍스트 라인 */
-        .text-line {
-            position: relative;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 60px;
-            color: black;
+        /* --- 메뉴 바를 위한 Header 스타일 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+            pointer-events: none;
         }
 
-        /* --- 애니메이션 스타일 변경 --- */
+        /* --- 메뉴 바 스타일 --- */
+        .nav-container {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px 32px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: 0.3s ease;
+        }
 
-        /* 파란 텍스트를 감싸는 '창' 역할 */
-        .overlay-text {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-5%); 
-            color: #0900FF;
-            height: 60px; /* 정확히 한 줄만 보이도록 높이 고정 */
-            overflow: hidden; /* 창 밖의 내용은 숨김 */
+        .logo {
+            width: 60px;
+            height: 40px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+
+        .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
         }
         
-        /* 실제로 위아래로 움직이는 단어 2개를 담는 래퍼 */
-        .word-shifter {
-            /* JavaScript에서 transition 속도를 직접 제어합니다. */
+        .menu-item.is-animating .word-shifter {
+            transform: translateY(-30px);
         }
 
-        /* 이 클래스가 추가되면 위로 슬라이드 됩니다. */
-        .word-shifter.is-active {
-            transform: translateY(-60px);
-        }
-
-        /* 현재 보이는 단어와 아래에 숨겨진 단어 */
         .visible-word, .hidden-word {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 60px;
+            /* align-items: center; */
+            height: 30px;
             white-space: nowrap;
         }
-        
-        /*
-        *
-        * ⭐ 2번 질문 해결: 두 글자 단어 간격 조절용 스타일 ⭐
-        * '조화' -> '조 화' 처럼 보이게 합니다.
-        * 폰트 크기가 24px이므로, 24px를 추가하면 세 글자(24*3=72)와 
-        * 두 글자+간격(24*2 + 24 = 72)의 너비가 비슷해집니다.
-        *
-        */
-        .visible-word.two-letter,
-        .hidden-word.two-letter {
-            letter-spacing: 24px;
+
+        .circle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
+        .circle-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-container:hover { transform: scale(1.03); }
 
-        /* --- 하단 푸터 스타일 --- */
-        .footer {
-            position: absolute;
-            bottom: 30px;
-            color: rgba(143, 143, 143, 0.7);
-            font-size: 15px;
+        /* [추가] 중앙 텍스트 스타일 */
+        .intro-container h1 {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
         }
 
-        .footer .light { font-weight: 200; }
-        .footer .semi-bold { font-weight: 600; }
+        /* [추가] 자막 텍스트 애니메이션 스타일 */
+        .subtitle-line {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 1.95rem; /* [수정] 1.3배 키움 */
+            font-weight: 200;
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flipper {
+            position: relative;
+            height: 39px; /* [수정] 1.3배 키움 */
+            overflow: hidden;
+            font-weight: 600; /* 강조되는 단어만 굵게 */
+        }
+
+        .flipper .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .flipper.is-animating .word-shifter {
+            transform: translateY(-39px); /* [수정] 1.3배 키움 */
+        }
+
+        /* [추가] 자막 애니메이션 내부 단어 높이 조정 */
+        .flipper .visible-word,
+        .flipper .hidden-word {
+            height: 39px;
+        }
+
+        /* [추가] 하단 버튼 스타일 */
+        .button-container {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: center; /* [추가] 버튼을 중앙에 정렬 */
+            gap: 1.5rem;
+        }
+
+        .action-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 12px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--text-primary);
+            color: var(--bg-color);
+        }
+
+        /* [추가] 배경 이미지 스타일 */
+        .background-image {
+            position: fixed;
+            top: 50%;
+            left: 53%;
+            transform: translate(-50%, -50%);
+            width: 500%; /* <<< 이 값을 조절하여 이미지 크기를 변경할 수 있습니다 (예: 50%, 1000px) */
+            height: auto; /* 너비에 맞춰 높이는 자동으로 조절됩니다 */
+            max-height: 150vh; /* 화면보다 너무 커지는 것을 방지 */
+            object-fit: contain;
+            z-index: -1; /* 텍스트보다는 뒤, 파티클보다는 앞에 위치 */
+            opacity: 0.3; /* 이미지가 너무 튀지 않도록 투명도 조절 */
+        }
+
     </style>
 </head>
 <body>
+    <!-- 스파클 배경 효과를 위한 Canvas -->
+    <canvas id="sparkle-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;"></canvas>
 
-    <div class="main-container">
-        
-        <div class="text-container">
-            <div class="text-line first">
-                관찰에서&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;을,
-                <div class="overlay-text">
+    <img src="img/PP.png" class="background-image" alt="Background">
+    <!-- 메뉴 바 HTML -->
+    <header>
+        <div class="nav-container">
+            <img src="img/logo.png" alt="Logo" class="logo">
+            <div class="menu">
+                <div class="menu-item" id="menu-welcome">
                     <div class="word-shifter">
-                        <div class="visible-word"></div>
+                        <div class="visible-word">WELCOME</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-project">
+                    <div class="word-shifter">
+                        <div class="visible-word">PROJECT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-contact">
+                    <div class="word-shifter">
+                        <div class="visible-word">CONTACT</div>
                         <div class="hidden-word"></div>
                     </div>
                 </div>
             </div>
-            <div class="text-line second">
-                공감에서&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;을.
-                <div class="overlay-text">
-                    <div class="word-shifter">
-                        <div class="word-shifter">
-                            <div class="visible-word"></div>
-                            <div class="hidden-word"></div>
-                        </div>
-                    </div>
+            <div class="circle-btn">≡</div>
+        </div>
+    </header>
+
+    <!-- [추가] 메인 콘텐츠 컨테이너 및 H1 태그 -->
+    <main class="intro-container">
+        <h1> "관찰을 낯설게, 공감으로 어울리게" </h1>
+        <!-- [추가] 자막 텍스트 애니메이션 HTML -->
+        <div class="subtitle-line">
+            <span>저는</span>
+            <div class="flipper" id="subtitle-flipper">
+                <div class="word-shifter">
+                    <div class="visible-word"></div>
+                    <div class="hidden-word"></div>
                 </div>
             </div>
+            <span>입니다.</span>
         </div>
-
-        <div class="footer">
-            <span class="light">designed by </span>
-            <span class="semi-bold">hyemin</span>
-            <span class="light">.</span>
+        <!-- [추가] 하단 버튼 HTML -->
+        <div class="button-container">
+            <a href="index_main.html" class="action-btn">GET IN</a>
+            <a href="#" class="action-btn">CONTACT</a>
         </div>
-
-    </div>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- [속도 조절] ---
-            const slideDuration = 600; 
-            const pauseDuration = 2000; 
-            // --------------------
-
-
-            /*
-            *
-            * ⭐ 1번 질문 답변: 여기서 단어를 수정하시면 됩니다 ⭐
-            *
-            */
-            const firstWords = [
-                '참신함', '신선함', '새로움', '독창성', '의외성', 
-                '독특함', '차별성', '파격성', '실험성', '신세계'
-            ];
-            const secondWords = [
-                '합일', '결합', '통일', '연결', '흐름', 
-                '영향', '몰입', '교감', '순간', '발견'
-            ];
-            
-            
-            /*
-            *
-            * ⭐ 2번 질문 해결: 텍스트를 설정하며 클래스를 추가하는 헬퍼 함수 ⭐
-            *
-            */
-            function setTextAndClass(element, text) {
-                element.textContent = text;
-                // 단어 길이를 확인해서 2글자이면 'two-letter' 클래스 추가
-                if (text.length === 2) {
-                    element.classList.add('two-letter');
-                } else {
-                    element.classList.remove('two-letter');
-                }
+        // --- 스파클 배경 애니메이션 스크립트 ---
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+        let particles = [];
+        const numParticles = 800;
+        const particleColors = ['#FFFFFF', '#E0F7FA', '#D1C4E9', '#BBDEFB', '#A7C7E7'];
+        const mouse = { x: undefined, y: undefined, radius: 100 };
+        class Particle {
+            constructor() {
+                this.baseX = Math.random() * width; this.baseY = Math.random() * height;
+                this.x = this.baseX; this.y = this.baseY;
+                this.size = Math.random() * 2.5 + 0.2;
+                this.speedX = 0; this.speedY = 0;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.density = (Math.random() * 30) + 1;
+                this.baseShadowBlur = Math.random() * 5 + 2; this.shadowBlur = this.baseShadowBlur;
             }
+            update() {
+                const dx = mouse.x - this.x; const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const forceDirectionX = dx / distance; const forceDirectionY = dy / distance;
+                const maxDistance = mouse.radius; const force = (maxDistance - distance) / maxDistance;
+                let targetShadowBlur = this.baseShadowBlur;
+                if (distance < mouse.radius) {
+                    this.speedX -= forceDirectionX * force * 0.1 * this.density;
+                    this.speedY -= forceDirectionY * force * 0.1 * this.density;
+                    const proximity = 1 - (distance / mouse.radius);
+                    targetShadowBlur = this.baseShadowBlur + proximity * 15;
+                }
+                this.shadowBlur += (targetShadowBlur - this.shadowBlur) * 0.1;
+                this.speedX += (this.baseX - this.x) * 0.01; this.speedY += (this.baseY - this.y) * 0.01;
+                this.speedX *= 0.95; this.speedY *= 0.95;
+                this.x += this.speedX; this.y += this.speedY;
+            }
+            draw() {
+                ctx.save(); ctx.shadowColor = 'white'; ctx.shadowBlur = this.shadowBlur;
+                ctx.fillStyle = this.color; ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            }
+        }
+        function handleParticles() { for (const particle of particles) { particle.update(); particle.draw(); } }
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        function initParticles() { for (let i = 0; i < numParticles; i++) { particles.push(new Particle()); } }
+        function animateParticles() { ctx.clearRect(0, 0, width, height); handleParticles(); requestAnimationFrame(animateParticles); }
+        initParticles(); animateParticles();
 
-
-            function animateWords(lineSelector, words) {
-                const line = document.querySelector(lineSelector);
-                const shifter = line.querySelector('.word-shifter');
-                const visibleWord = line.querySelector('.visible-word');
-                const hiddenWord = line.querySelector('.hidden-word');
-                
-                let currentIndex = 0;
-
-                // 초기 텍스트 설정 (⭐ 수정됨)
-                setTextAndClass(visibleWord, words[currentIndex]);
-                setTextAndClass(hiddenWord, words[(currentIndex + 1) % words.length]);
-
-                // 애니메이션 루프 함수
-                function nextSlide() {
-                    // 1. 슬라이드 업 애니메이션 시작
-                    shifter.style.transition = `transform ${slideDuration / 1000}s cubic-bezier(0.76, 0, 0.24, 1)`;
-                    shifter.classList.add('is-active');
-
-                    // 2. 슬라이드 업이 끝난 후 실행
+        // --- 메뉴 바 애니메이션 스크립트 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const slideDuration = 600;
+            const welcomeWords = ['WELCOME', '안녕하세요', 'WELCOME', '환영합니다'];
+            const projectWords = ['PROJECT', 'WORK', 'PROJECT', 'PRODUCT'];
+            const contactWords = ['CONTACT', 'CALLME', 'CONTACT', 'TOUCH'];
+            function setupHoverAnimation(elementId, words) {
+                const menuItem = document.getElementById(elementId);
+                if (!menuItem) return;
+                const shifter = menuItem.querySelector('.word-shifter');
+                const visibleWord = menuItem.querySelector('.visible-word');
+                const hiddenWord = menuItem.querySelector('.hidden-word');
+                let currentIndex = 0; let isAnimating = false;
+                hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                menuItem.addEventListener('mouseenter', () => {
+                    if (isAnimating) return;
+                    isAnimating = true; menuItem.classList.add('is-animating');
                     setTimeout(() => {
-                        // 인덱스 업데이트
                         currentIndex = (currentIndex + 1) % words.length;
-
-                        // 3. 트랜지션 잠시 끄기
                         shifter.style.transition = 'none';
-                        
-                        // 텍스트 교체 및 클래스 업데이트 (⭐ 수정됨)
-                        setTextAndClass(visibleWord, words[currentIndex]);
-                        setTextAndClass(hiddenWord, words[(currentIndex + 1) % words.length]);
-                        
-                        shifter.classList.remove('is-active'); // 위치 리셋
-                        
-                        // 4. 다음 애니메이션을 위해 잠시 후 트랜지션 다시 켬
-                        setTimeout(() => {
-                            // 5. 정해진 대기 시간 후 다음 슬라이드 시작
-                            setTimeout(nextSlide, pauseDuration);
-                        }, 50);
-
+                        visibleWord.textContent = words[currentIndex];
+                        menuItem.classList.remove('is-animating');
+                        hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                        setTimeout(() => { shifter.style.transition = ''; isAnimating = false; }, 50);
                     }, slideDuration);
-                }
-
-                // 최초 애니메이션 시작
-                setTimeout(nextSlide, pauseDuration);
+                });
             }
+            setupHoverAnimation('menu-welcome', welcomeWords);
+            setupHoverAnimation('menu-project', projectWords);
+            setupHoverAnimation('menu-contact', contactWords);
 
-            animateWords('.text-line.first', firstWords);
-            animateWords('.text-line.second', secondWords);
+            // --- [추가] 자막 텍스트 자동 애니메이션 스크립트 ---
+            const subtitleWords = ['김혜민', 'PRODUCT DESIGNER'];
+            const subtitleFlipper = document.getElementById('subtitle-flipper');
+            const subtitleShifter = subtitleFlipper.querySelector('.word-shifter');
+            const subtitleVisible = subtitleFlipper.querySelector('.visible-word');
+            const subtitleHidden = subtitleFlipper.querySelector('.hidden-word');
+            let subtitleIndex = 0;
+
+            function animateSubtitle() {
+                subtitleFlipper.classList.add('is-animating');
+
+                setTimeout(() => {
+                    subtitleIndex = (subtitleIndex + 1) % subtitleWords.length;
+                    subtitleShifter.style.transition = 'none';
+                    subtitleVisible.textContent = subtitleWords[subtitleIndex];
+                    subtitleFlipper.classList.remove('is-animating');
+                    subtitleHidden.textContent = subtitleWords[(subtitleIndex + 1) % subtitleWords.length];
+                    
+                    setTimeout(() => {
+                        subtitleShifter.style.transition = '';
+                    }, 50);
+                }, 600); // CSS transition 시간과 일치
+            }
+            subtitleVisible.textContent = subtitleWords[0];
+            subtitleHidden.textContent = subtitleWords[1];
+            setInterval(animateSubtitle, 2000); // 2초마다 실행
         });
     </script>
-
 </body>
 </html>

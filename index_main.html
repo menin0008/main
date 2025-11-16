@@ -7,7 +7,7 @@
     <style>
         /* 1. CSS 변수 및 기본 페이지 설정 (쇼케이스 기준) */
         :root {
-            --bg-color: #0c0b10;
+            --bg-color: #101726; /* [수정] 네이비 색상으로 변경 */
             --text-primary: #f5f5f7;
             --text-secondary: #a1a1a6;
             --card-width: 676px; /* 520px * 1.3 */
@@ -26,10 +26,10 @@
             color: var(--text-primary);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             /* --- [수정] 높이를 1080px로 고정하고 중앙 정렬 --- */
-            height: 1080px;
-            display: flex; /* 자식 요소를 중앙에 배치하기 위함 */
-            justify-content: center; /* 가로 중앙 */
-            align-items: center; /* 세로 중앙 */
+            /* [수정] 2분할 레이아웃을 위해 body를 flex 컨테이너로 사용 */
+            display: flex;
+            height: 100vh; /* 전체 화면 높이 사용 */
+            margin: 0;
             overflow-x: hidden; /* 가로 스크롤 방지 */
         }
 
@@ -62,12 +62,8 @@
         }
 
         .logo {
-            width: 40px;
+            width: 60px;
             height: 40px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg');
-            background-size: cover;
-            background-position: center;
-            border-radius: 50%;
         }
 
         .menu {
@@ -122,21 +118,22 @@
 
 
         /* --- 쇼케이스 스타일 시작 --- */
-        .showcase-container {
+        .showcase-text {
+            /* [수정] 왼쪽 영역 스타일 */
+            width: 50vw;
+            padding-left: 500px; /* [수정] 왼쪽으로부터 200px 여백 */
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            width: 100%;
-            max-width: 1280px;
-            gap: 4rem;
         }
-
-        .showcase-text { flex: 1; max-width: 480px; }
         .showcase-text h1 { font-size: 3.5rem; line-height: 1.15; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.05em; }
         .showcase-text p { font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; max-width: 420px; }
 
         .website-stack-container {
-            flex: 1.2;
+            /* [수정] 오른쪽 영역 스타일 */
+            width: 50vw;
+            padding-right: 100px; /* [추가] 오른쪽으로부터 100px 여백 */
+            align-items: center;
             height: calc(var(--card-height) + 150px);
             position: relative;
             perspective: var(--stack-perspective);
@@ -144,6 +141,8 @@
             cursor: pointer; /* 클릭 가능함을 나타내기 위해 커서 변경 */
             justify-content: center;
             align-items: center;
+            height: 100vh; /* 오른쪽 영역 전체 높이 사용 */
+            overflow: hidden; /* 내부 애니메이션이 영역을 벗어나지 않도록 설정 */
         }
         
         .website-card {
@@ -182,7 +181,7 @@
 
         /* 반응형 디자인 */
         @media (max-width: 1100px) {
-            .showcase-container { flex-direction: column; text-align: center; gap: 5rem; }
+            body { flex-direction: column; text-align: center; }
             .showcase-text p { margin: 0 auto; }
         }
         @media (max-width: 600px) {
@@ -221,10 +220,13 @@
 </head>
 <body>
 
+    <!-- [추가] 스파클 배경 효과를 위한 Canvas -->
+    <canvas id="sparkle-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;"></canvas>
+
     <!-- [추가] 메뉴 바 HTML -->
     <header>
         <div class="nav-container">
-            <div class="logo"></div>
+            <img src="img/logo.png" alt="Logo" class="logo">
             <div class="menu">
                 <div class="menu-item" id="menu-welcome">
                     <div class="word-shifter">
@@ -250,58 +252,165 @@
     </header>
 
     <!-- 기존 쇼케이스 HTML -->
-    <!-- [수정] showcase-text와 website-stack-container의 순서를 원래대로 복원 -->
-    <div class="showcase-container">
-        <div class="showcase-text">
-            <h1>Web Experience, Elevated.</h1>
-            <p>Seamlessly flowing, visually captivating. Discover a fluid, interactive showcase built for the modern web.</p>
+    <!-- [수정] 2분할 레이아웃을 위해 showcase-container 제거 -->
+    <div class="showcase-text">
+        <h1>Web Experience, Elevated.</h1>
+        <p>Seamlessly flowing, visually captivating. Discover a fluid, interactive showcase built for the modern web.</p>
+    </div>
+    <div class="website-stack-container">
+        <div class="website-card">
+            <a href="#" class="card-link" target="_blank">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80" alt="Abstract design 1"></div>
+                <div class="card-footer-text">Project One</div>
+            </a>
         </div>
-        <div class="website-stack-container">
-            <div class="website-card">
-                <a href="#" class="card-link" target="_blank">
-                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80" alt="Abstract design 1"></div>
-                    <div class="card-footer-text">Project One</div>
-                </a>
-            </div>
-            <div class="website-card">
-                <a href="#" class="card-link" target="_blank">
-                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Abstract design 2"></div>
-                </a>
-            </div>
-            <div class="website-card">
-                <a href="#" class="card-link" target="_blank">
-                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&q=80" alt="Abstract design 3"></div>
-                    <div class="card-footer-text">Project Three</div>
-                </a>
-            </div>
-            <div class="website-card">
-                <a href="#" class="card-link" target="_blank">
-                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1507202151035-c63d5dfe5b4a?w=1200&q=80" alt="Abstract design 4"></div>
-                    <div class="card-footer-text">Project Four</div>
-                </a>
-            </div>
-            <div class="website-card">
-                <a href="#" class="card-link" target="_blank">
-                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=1200&q=80" alt="Abstract design 5"></div>
-                    <div class="card-footer-text">Project Five</div>
-                </a>
-            </div>
+        <div class="website-card">
+            <a href="#" class="card-link" target="_blank">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Abstract design 2"></div>
+            </a>
+        </div>
+        <div class="website-card">
+            <a href="#" class="card-link" target="_blank">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&q=80" alt="Abstract design 3"></div>
+                <div class="card-footer-text">Project Three</div>
+            </a>
+        </div>
+        <div class="website-card">
+            <a href="#" class="card-link" target="_blank">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1507202151035-c63d5dfe5b4a?w=1200&q=80" alt="Abstract design 4"></div>
+                <div class="card-footer-text">Project Four</div>
+            </a>
+        </div>
+        <div class="website-card">
+            <a href="#" class="card-link" target="_blank">
+                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=1200&q=80" alt="Abstract design 5"></div>
+                <div class="card-footer-text">Project Five</div>
+            </a>
         </div>
     </div>
 
     <script>
+        // --- [추가] 스파클 배경 애니메이션 스크립트 ---
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        let particles = [];
+        const numParticles = 800; // [수정] 파티클 수량을 800개로 증가
+        // [수정] 더 밝은 파스텔 톤과 흰색을 추가하여 빛나는 느낌 강화
+        const particleColors = ['#FFFFFF', '#E0F7FA', '#D1C4E9', '#BBDEFB', '#A7C7E7'];
+        const mouse = {
+            x: undefined,
+            y: undefined,
+            radius: 100 // 마우스 상호작용 반경
+        };
+
+        // 파티클(Particle) 클래스 정의
+        class Particle {
+            constructor() {
+                // [수정] 파티클의 기준 위치를 저장
+                this.baseX = Math.random() * width;
+                this.baseY = Math.random() * height;
+                this.x = this.baseX;
+                this.y = this.baseY;
+                // [수정] 크기를 더 작고 다양하게 조절 (0.2px ~ 2.7px)
+                this.size = Math.random() * 2.5 + 0.2;
+                // [수정] 파티클의 현재 속도
+                this.speedX = 0;
+                this.speedY = 0;
+                // [수정] 지정된 푸른색 중에서 무작위로 색상 선택
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                // [추가] 파티클의 밀도 (움직임에 영향)
+                this.density = (Math.random() * 30) + 1;
+                // [추가] 파티클의 빛 효과를 위한 속성
+                this.baseShadowBlur = Math.random() * 5 + 2; // 기본 빛의 세기
+                this.shadowBlur = this.baseShadowBlur;
+            }
+
+            update() {
+                // --- [수정] 마우스 반발 효과 로직 ---
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const forceDirectionX = dx / distance;
+                const forceDirectionY = dy / distance;
+                const maxDistance = mouse.radius;
+                // 마우스와 가까울수록 힘이 강해짐
+                const force = (maxDistance - distance) / maxDistance;
+
+                let targetShadowBlur = this.baseShadowBlur;
+
+                // 마우스 반경 내에 있으면 밀어내는 힘과 빛 효과 적용
+                if (distance < mouse.radius) {
+                    this.speedX -= forceDirectionX * force * 0.1 * this.density;
+                    this.speedY -= forceDirectionY * force * 0.1 * this.density;
+
+                    // [추가] 마우스가 가까울수록 빛이 강해짐
+                    const proximity = 1 - (distance / mouse.radius);
+                    targetShadowBlur = this.baseShadowBlur + proximity * 15;
+                }
+                // [추가] 빛의 세기를 부드럽게 변경
+                this.shadowBlur += (targetShadowBlur - this.shadowBlur) * 0.1;
+
+                // --- [추가] 원래 위치로 돌아가려는 힘과 감속 로직 ---
+                // 원래 위치로 천천히 돌아가려는 힘
+                this.speedX += (this.baseX - this.x) * 0.01;
+                this.speedY += (this.baseY - this.y) * 0.01;
+
+                // 속도에 감속(damping)을 적용하여 부드럽게 멈추도록 함
+                this.speedX *= 0.95;
+                this.speedY *= 0.95;
+
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+
+            draw() {
+                ctx.save(); // 현재 컨텍스트 설정을 저장
+                // [추가] 파티클에 빛나는 효과(그림자) 적용
+                ctx.shadowColor = 'white';
+                ctx.shadowBlur = this.shadowBlur;
+                ctx.fillStyle = this.color;
+                // [수정] 최소 투명도를 높여 더 밝게 보이도록 수정
+                ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore(); // 저장했던 컨텍스트 설정으로 복원 (다른 요소에 영향 방지)
+            }
+        }
+
+        function handleParticles() {
+            for (const particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- [통합] 메뉴 바 애니메이션 스크립트 ---
             const slideDuration = 600;
-            const welcomeWords = ['WELCOME', 'BIENVENUE', 'WILLKOMMEN', 'ようこそ'];
-            const projectWords = ['PROJECT', 'PROJET', 'PROJEKT', 'プロジェクト'];
-            const contactWords = ['CONTACT', 'CONTACTO', 'KONTAKT', 'コンタクト'];
+            const welcomeWords = ['WELCOME', '안녕하세요', 'WELCOME', '환영합니다'];
+            const projectWords = ['PROJECT', 'WORK', 'PROJECT', 'PRODUCT'];
+            const contactWords = ['CONTACT', 'CALLME', 'CONTACT', 'TOUCH'];
 
             function setupHoverAnimation(elementId, words) {
                 const menuItem = document.getElementById(elementId);
@@ -425,7 +534,7 @@
                     const middleIndex = Math.floor(totalCards / 2);
                     const positionFromMiddle = stackPosition - middleIndex;
 
-                    const translateX = 60; 
+                    const translateX = 15; // [수정] 펼쳤을 때 오른쪽으로 덜 밀리도록 값 조정 (60 -> 35)
                     const rotateY = -45;
                     
                     // 기본 Y 위치 + 스크롤 오프셋
@@ -488,6 +597,23 @@
             });
 
             updateCardPositions(true);
+
+            // --- [추가] 파티클 초기 생성 ---
+            function initParticles() {
+                for (let i = 0; i < numParticles; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            // --- [추가] 스파클 애니메이션 루프 시작 ---
+            function animateParticles() {
+                // [수정] 잔상 효과를 제거하기 위해 매 프레임 캔버스를 깨끗하게 지웁니다.
+                ctx.clearRect(0, 0, width, height);
+                handleParticles();
+                requestAnimationFrame(animateParticles);
+            }
+            initParticles();
+            animateParticles();
         });
     </script>
 </body>

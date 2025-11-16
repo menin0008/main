@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        :root {
+            --bg-color: #101726;
+            --text-primary: #f5f5f7;
+            --accent-blue: #bbdefb;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;600&display=swap');
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+            pointer-events: none;
+        }
+
+        .nav-container {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px 32px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: 0.3s ease;
+        }
+
+        .logo {
+            width: 60px;
+            height: 40px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+
+        .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        
+        .menu-item.is-animating .word-shifter {
+            transform: translateY(-30px);
+        }
+
+        .visible-word, .hidden-word {
+            display: flex;
+            justify-content: center;
+            height: 30px;
+            white-space: nowrap;
+        }
+
+        .circle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .circle-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-container:hover { transform: scale(1.03); }
+
+        .contact-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .contact-container h1 {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            text-shadow: 0 0 8px rgba(245, 245, 247, 0.6),
+                         0 0 20px rgba(187, 222, 251, 0.4),
+                         0 0 40px rgba(187, 222, 251, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .contact-container p {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 200;
+            max-width: 500px;
+            line-height: 1.6;
+            color: #a1a1a6;
+        }
+
+        .mail-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--bg-color);
+            background-color: var(--text-primary);
+            text-decoration: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 2rem;
+            box-shadow: 0 0 12px rgba(187, 222, 251, 0.4),
+                        0 0 20px rgba(187, 222, 251, 0.2);
+        }
+
+        .mail-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(187, 222, 251, 0.7),
+                        0 0 35px rgba(187, 222, 251, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sparkle-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;"></canvas>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html"><img src="img/logo.png" alt="Logo" class="logo"></a>
+            <div class="menu">
+                <div class="menu-item" id="menu-welcome">
+                    <div class="word-shifter"><div class="visible-word">WELCOME</div><div class="hidden-word"></div></div>
+                </div>
+                <div class="menu-item" id="menu-project">
+                    <div class="word-shifter"><div class="visible-word">PROJECT</div><div class="hidden-word"></div></div>
+                </div>
+                <div class="menu-item" id="menu-contact">
+                    <div class="word-shifter"><div class="visible-word">CONTACT</div><div class="hidden-word"></div></div>
+                </div>
+            </div>
+            <div class="circle-btn">≡</div>
+        </div>
+    </header>
+
+    <main class="contact-container">
+        <h1>GET IN TOUCH</h1>
+        <p>언제나 열려있습니다. <br>새로운 기회나 협업 제안, 혹은 커피 한잔과 함께하는 가벼운 대화도 환영합니다.</p>
+        <a href="mailto:your-email@example.com" class="mail-btn">your-email@example.com</a>
+    </main>
+
+    <script>
+        // 스파클 배경 효과 (index.html에서 복사)
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+        let particles = [];
+        const numParticles = 800;
+        const particleColors = ['#FFFFFF', '#E0F7FA', '#D1C4E9', '#BBDEFB', '#A7C7E7'];
+        function initParticles() { for (let i = 0; i < numParticles; i++) { particles.push(new Particle()); } }
+        class Particle { constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 2.5 + 0.2; this.speedX = (Math.random() - 0.5) * 0.5; this.speedY = (Math.random() - 0.5) * 0.5; this.color = particleColors[Math.floor(Math.random() * particleColors.length)]; } update() { this.x += this.speedX; this.y += this.speedY; if (this.x > width || this.x < 0) this.speedX *= -1; if (this.y > height || this.y < 0) this.speedY *= -1; } draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
+        function animateParticles() { ctx.clearRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+        initParticles(); animateParticles();
+    </script>
+</body>
+</html>

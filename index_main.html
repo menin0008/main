@@ -319,8 +319,8 @@
     <div class="website-stack-container">
         <div class="website-card">
             <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-            <!-- [수정] 1번 카드 이미지를 프로필 캐릭터로 변경 -->
-            <div class="card-body"><img class="card-image" src="img/HM2.png" alt="Profile Character" style="object-fit: contain;"></div>
+            <!-- [수정] 1번 카드 이미지 경로 오류 수정 -->
+            <div class="card-body"><img class="card-image" src="img/3d.png" alt="Profile Character" style="object-fit: contain;"></div>
             <div class="card-footer-text"> hye min <br> profile</div>
         </div>
         <div class="website-card">
@@ -512,11 +512,16 @@
             const showcaseDescription = showcaseTextContainer.querySelector('p');
 
             const defaultContent = {
-                title: '“ 낯섦과 어울림을 설계하는 ”',
+                title: '“  To be Product designer ”',
                 description: "저는 '낯섦'으로 시선을 끌고, '어울림'으로 마음을 붙잡습니다. \n\n혁신은 언제나 낯설지만, 그 경험은 반드시 직관적이어야 합니다. \n\n모두가 새로움을 만나는 어떠한 접점에서든 망설임 없이 다음 단계로 나아갈 수 있도록 어울리게, 그 모든 과정을 치밀하게 설계합니다. 가장 대담한 시도가 가장 편안한 경험이 되도록 하는 디자이너가 되도록, 끊임없이 노력하겠습니다."
             };
             const cardContentData = [
-                { title: '“ 낯섦과 어울림을 설계하는 ”', description: "저는 '낯섦'으로 시선을 끌고, '어울림'으로 마음을 붙잡습니다. \n\n혁신은 언제나 낯설지만, 그 경험은 반드시 직관적이어야 합니다. \n\n모두가 새로움을 만나는 어떠한 접점에서든 망설임 없이 다음 단계로 나아갈 수 있도록 어울리게, 그 모든 과정을 치밀하게 설계합니다. 가장 대담한 시도가 가장 편안한 경험이 되도록 하는 디자이너가 되도록, 끊임없이 노력하겠습니다." },
+                { 
+                    title: '“ To be Product designer ”', 
+                    description: "저는 '낯섦'으로 시선을 끌고, '어울림'으로 마음을 붙잡습니다. ctrl + click 을 통해 더 자세한 프로필을 보실 수 있습니다.",
+                    // [수정] 2번 카드와 동일한 구조로 링크 임시 설정
+                    link: 'https://www.figma.com/slides/CH9U2wVKRSigzJ303VNpbN/2401110073-%EA%B9%80%ED%98%9C%EB%AF%BC_%EC%9C%84%ED%95%98%EB%8B%A4-%EA%B8%80%EB%A1%9C%EB%B2%8C?node-id=1-722&t=rYNHnV1JaE5ox8in-1'
+                },
                 { 
                     title: 'Dict Box Redesign', 
                     description: '한영사전 앱 Dict Box의 사용성을 개선하는 UI/UX 리디자인 프로젝트입니다. ctrl + click 을 통해 프로토타입을 보실 수 있습니다.' ,
@@ -672,11 +677,11 @@
                 const focusedCard = document.querySelector('.website-card.is-focused');
 
                 // --- [추가] Ctrl+Click 또는 Cmd+Click 이벤트 처리 ---
-                // 상세 보기 상태의 5번 카드에서만 동작
-                if (clickedCard && clickedCard.classList.contains('is-focused') && (e.ctrlKey || e.metaKey)) {
+                // [수정] 카드가 펼쳐진 상태(is-fanned)에서 Ctrl/Cmd 키를 누르고 클릭하면 링크 열기
+                if (isFanned && clickedCard && (e.ctrlKey || e.metaKey)) {
                     const cardIndex = cards.indexOf(clickedCard);
-                    // [수정] 카드에 링크 속성이 있으면 링크 열기 (카드 번호와 무관하게)
-                    if (cardIndex !== -1 && cardContentData[cardIndex].link) {
+                    // 링크가 있는 카드인지 확인
+                    if (cardIndex !== -1 && cardContentData[cardIndex] && cardContentData[cardIndex].link) {
                         window.open(cardContentData[cardIndex].link, '_blank'); // 새 탭에서 링크 열기
                         e.preventDefault(); // 기본 동작 방지
                         return; // 다른 클릭 로직 실행 중단

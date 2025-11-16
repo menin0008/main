@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Web Showcase</title>
+    <title>Interactive Web Showcase with Animated Nav</title>
     <style>
-        /* 1. CSS 변수 및 기본 페이지 설정 */
+        /* 1. CSS 변수 및 기본 페이지 설정 (쇼케이스 기준) */
         :root {
             --bg-color: #0c0b10;
             --text-primary: #f5f5f7;
             --text-secondary: #a1a1a6;
-            --card-width: 520px;
-            --card-height: 335px;
+            --card-width: 676px; /* 520px * 1.3 */
+            --card-height: 435px; /* 335px * 1.3 */
+            --card-width: 811px; /* 676px * 1.2 */
+            --card-height: 522px; /* 435px * 1.2 */
             --stack-perspective: 2000px;
             --animation-duration: 1.2s;
             --animation-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -23,16 +25,103 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            /* --- [수정] 높이를 1080px로 고정하고 중앙 정렬 --- */
+            height: 1080px;
+            display: flex; /* 자식 요소를 중앙에 배치하기 위함 */
+            justify-content: center; /* 가로 중앙 */
+            align-items: center; /* 세로 중앙 */
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+        }
+
+        /* --- [추가된 부분] 메뉴 바를 위한 Header 스타일 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* 카드 스택보다 위에 오도록 설정 */
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+            pointer-events: none; /* 헤더 영역은 클릭 방해 안 함 */
+        }
+
+        /* --- 메뉴 바 스타일 시작 --- */
+        .nav-container {
+            pointer-events: auto; /* 메뉴 바 자체는 클릭 가능하도록 설정 */
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px 32px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: 0.3s ease;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+
+        .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        
+        .menu-item.is-animating .word-shifter {
+            transform: translateY(-30px);
+        }
+
+        .visible-word, .hidden-word {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            padding: 2rem;
-            box-sizing: border-box;
+            height: 30px;
+            white-space: nowrap;
         }
 
-        /* 2. 메인 컨테이너 (좌: 텍스트, 우: 카드 스택) */
+        .circle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .circle-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-container:hover { transform: scale(1.03); }
+        /* --- 메뉴 바 스타일 끝 --- */
+
+
+        /* --- 쇼케이스 스타일 시작 --- */
         .showcase-container {
             display: flex;
             align-items: center;
@@ -42,39 +131,21 @@
             gap: 4rem;
         }
 
-        /* 3. 왼쪽 텍스트 영역 */
-        .showcase-text {
-            flex: 1;
-            max-width: 480px;
-        }
+        .showcase-text { flex: 1; max-width: 480px; }
+        .showcase-text h1 { font-size: 3.5rem; line-height: 1.15; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.05em; }
+        .showcase-text p { font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; max-width: 420px; }
 
-        .showcase-text h1 {
-            font-size: 3.5rem;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-        }
-
-        .showcase-text p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 420px;
-        }
-
-        /* 4. 오른쪽 웹페이지 스택 컨테이너 */
         .website-stack-container {
             flex: 1.2;
             height: calc(var(--card-height) + 150px);
             position: relative;
             perspective: var(--stack-perspective);
             display: flex;
+            cursor: pointer; /* 클릭 가능함을 나타내기 위해 커서 변경 */
             justify-content: center;
             align-items: center;
         }
         
-        /* 5. 개별 웹페이지 카드 스타일 */
         .website-card {
             position: absolute;
             width: var(--card-width);
@@ -84,163 +155,339 @@
             background: rgba(28, 26, 38, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            transform-origin: center;
-            transition: transform var(--animation-duration) var(--animation-ease),
-                        opacity calc(var(--animation-duration) / 2) ease;
+            transform-origin: 100% 50%; /* [수정] 애니메이션 기준점을 오른쪽 중앙으로 변경 */
+            transition: transform var(--animation-duration) var(--animation-ease), opacity calc(var(--animation-duration) / 2) ease;
             transform-style: preserve-3d;
             will-change: transform, opacity;
         }
 
-        /* 6. 카드 헤더 (macOS 창 시뮬레이션) */
-        .card-header {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.25);
+        /* --- [추가] 펼쳐진 카드에 대한 호버 효과 --- */
+        .website-stack-container.is-fanned .website-card:hover {
+            transform: var(--hover-transform) !important; /* JS로 적용된 transform을 덮어쓰고 호버 효과 적용 */
+            filter: brightness(1.2); /* 카드를 더 밝게 */
+            z-index: 100 !important; /* 호버된 카드를 맨 위로 */
+            transition-duration: 0.4s; /* 호버 효과 전환 속도 */
         }
 
+        .card-header { display: flex; align-items: center; padding: 0.75rem; background: rgba(0, 0, 0, 0.25); }
         .window-dots { display: flex; gap: 0.5rem; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
         .dot-red { background: #ff5f56; }
         .dot-yellow { background: #ffbd2e; }
         .dot-green { background: #27c93f; }
 
-        /* 7. 카드 본문 (이미지 컨테이너) */
-        .card-body {
-            width: 100%;
-            height: calc(100% - 38px);
-        }
+        .card-body { width: 100%; height: calc(100% - 38px); }
+        .card-image { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
 
-        .card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-        }
-
-        /* 8. 반응형 디자인 */
+        /* 반응형 디자인 */
         @media (max-width: 1100px) {
-            .showcase-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 5rem;
-            }
+            .showcase-container { flex-direction: column; text-align: center; gap: 5rem; }
             .showcase-text p { margin: 0 auto; }
         }
         @media (max-width: 600px) {
-            :root {
-                --card-width: 90vw;
-                --card-height: 58vw;
-            }
+            :root { --card-width: 90vw; --card-height: 58vw; }
             .showcase-text h1 { font-size: 2.5rem; }
             .showcase-text p { font-size: 1.1rem; }
         }
+        /* --- 쇼케이스 스타일 끝 --- */
+
+        /* --- [추가] 카드 내부 콘텐츠 스타일 --- */
+        .card-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            /* --- [수정] 기본적으로 링크 클릭 비활성화 --- */
+            pointer-events: none;
+            text-decoration: none;
+            color: inherit;
+        }
+        /* --- [추가] 카드가 펼쳐졌을 때만 링크 클릭 활성화 --- */
+        .website-stack-container.is-fanned .card-link {
+            pointer-events: auto;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-footer-text {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
 
+    <!-- [추가] 메뉴 바 HTML -->
+    <header>
+        <div class="nav-container">
+            <div class="logo"></div>
+            <div class="menu">
+                <div class="menu-item" id="menu-welcome">
+                    <div class="word-shifter">
+                        <div class="visible-word">WELCOME</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-project">
+                    <div class="word-shifter">
+                        <div class="visible-word">PROJECT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-contact">
+                    <div class="word-shifter">
+                        <div class="visible-word">CONTACT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="circle-btn">≡</div>
+        </div>
+    </header>
+
+    <!-- 기존 쇼케이스 HTML -->
+    <!-- [수정] showcase-text와 website-stack-container의 순서를 원래대로 복원 -->
     <div class="showcase-container">
         <div class="showcase-text">
             <h1>Web Experience, Elevated.</h1>
             <p>Seamlessly flowing, visually captivating. Discover a fluid, interactive showcase built for the modern web.</p>
         </div>
-
         <div class="website-stack-container">
-            <!-- 이미지 교체: <img class="card-image" src="이미지_주소"> -->
             <div class="website-card">
-                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80" alt="Abstract design 1"></div>
+                <a href="#" class="card-link" target="_blank">
+                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80" alt="Abstract design 1"></div>
+                    <div class="card-footer-text">Project One</div>
+                </a>
             </div>
             <div class="website-card">
-                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Abstract design 2"></div>
+                <a href="#" class="card-link" target="_blank">
+                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Abstract design 2"></div>
+                </a>
             </div>
             <div class="website-card">
-                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&q=80" alt="Abstract design 3"></div>
+                <a href="#" class="card-link" target="_blank">
+                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&q=80" alt="Abstract design 3"></div>
+                    <div class="card-footer-text">Project Three</div>
+                </a>
             </div>
             <div class="website-card">
-                <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
-                <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1507202151035-c63d5dfe5b4a?w=1200&q=80" alt="Abstract design 4"></div>
+                <a href="#" class="card-link" target="_blank">
+                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1507202151035-c63d5dfe5b4a?w=1200&q=80" alt="Abstract design 4"></div>
+                    <div class="card-footer-text">Project Four</div>
+                </a>
+            </div>
+            <div class="website-card">
+                <a href="#" class="card-link" target="_blank">
+                    <div class="card-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div></div>
+                    <div class="card-body"><img class="card-image" src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=1200&q=80" alt="Abstract design 5"></div>
+                    <div class="card-footer-text">Project Five</div>
+                </a>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- [통합] 메뉴 바 애니메이션 스크립트 ---
+            const slideDuration = 600;
+            const welcomeWords = ['WELCOME', 'BIENVENUE', 'WILLKOMMEN', 'ようこそ'];
+            const projectWords = ['PROJECT', 'PROJET', 'PROJEKT', 'プロジェクト'];
+            const contactWords = ['CONTACT', 'CONTACTO', 'KONTAKT', 'コンタクト'];
+
+            function setupHoverAnimation(elementId, words) {
+                const menuItem = document.getElementById(elementId);
+                if (!menuItem) return;
+                const shifter = menuItem.querySelector('.word-shifter');
+                const visibleWord = menuItem.querySelector('.visible-word');
+                const hiddenWord = menuItem.querySelector('.hidden-word');
+                let currentIndex = 0;
+                let isAnimating = false;
+                hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+
+                menuItem.addEventListener('mouseenter', () => {
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    menuItem.classList.add('is-animating');
+                    setTimeout(() => {
+                        currentIndex = (currentIndex + 1) % words.length;
+                        shifter.style.transition = 'none';
+                        visibleWord.textContent = words[currentIndex];
+                        menuItem.classList.remove('is-animating');
+                        hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                        setTimeout(() => {
+                            shifter.style.transition = '';
+                            isAnimating = false;
+                        }, 50);
+                    }, slideDuration);
+                });
+            }
+            setupHoverAnimation('menu-welcome', welcomeWords);
+            setupHoverAnimation('menu-project', projectWords);
+            setupHoverAnimation('menu-contact', contactWords);
+
+
+            // --- 기존 쇼케이스 애니메이션 스크립트 ---
             const cards = Array.from(document.querySelectorAll('.website-card'));
             let order = Array.from({ length: cards.length }, (_, i) => i);
-            let isAnimating = false;
+            let cardAnimating = false; // 변수명 충돌 방지: isAnimating -> cardAnimating
             const AUTO_SWAP_INTERVAL = 4000;
+            const stackContainer = document.querySelector('.website-stack-container');
+            let fanScrollOffset = 0; // [추가] 펼쳐진 상태에서의 스크롤 위치
 
             function updateCardPositions(immediate = false) {
                 order.forEach((cardIndex, stackPosition) => {
                     const card = cards[cardIndex];
                     if (!card) return;
-
-                    const isVisible = stackPosition < 3;
+                    const isVisible = stackPosition < 5; /* 5개 보이도록 수정 */
+                    const opacity = Math.max(0, 1 - stackPosition * 0.15); // 뒤로 갈수록 흐려지게 계산
                     const scale = 1 - stackPosition * 0.15;
-                    const y = -stackPosition * 50;
+                    const y = -stackPosition * 80; /* 카드 간격 넓게 수정 */
                     const z = -stackPosition * 120;
-
                     card.style.transform = `translate3d(0px, ${y}px, ${z}px) scale(${scale})`;
                     card.style.zIndex = cards.length - stackPosition;
                     card.style.opacity = isVisible ? '1' : '0';
+                    card.style.opacity = opacity;
                     if (immediate) {
                         card.style.transition = 'none';
                     } else {
-                        card.style.transition = `
-                            transform var(--animation-duration) var(--animation-ease),
-                            opacity calc(var(--animation-duration) / 2) ease`;
+                        card.style.transition = `transform var(--animation-duration) var(--animation-ease), opacity calc(var(--animation-duration) / 2) ease`;
                     }
                 });
 
                 if (immediate) {
                     void cards[0].offsetHeight;
                     cards.forEach(card => {
-                        card.style.transition = `
-                            transform var(--animation-duration) var(--animation-ease),
-                            opacity calc(var(--animation-duration) / 2) ease`;
+                        card.style.transition = `transform var(--animation-duration) var(--animation-ease), opacity calc(var(--animation-duration) / 2) ease`;
                     });
                 }
             }
 
-            function swapAnimation() {
-                if (isAnimating) return;
-                isAnimating = true;
+            // --- [추가] 스크롤 다운 애니메이션 (기존 swapAnimation과 유사) ---
+            function scrollDown() {
+                if (cardAnimating) return;
+                cardAnimating = true;
 
                 const frontCardIndex = order[0];
                 const frontCard = cards[frontCardIndex];
-
-                // 1. ▼▼▼ 모션 변경 부분 ▼▼▼
-                // 맨 앞 카드를 아래 방향으로 떨어뜨리는 애니메이션으로 수정
+                // 맨 위 카드를 아래로 사라지게 하는 애니메이션
                 frontCard.style.transform = `translate3d(0, 150%, -200px) rotate(10deg)`;
-                // ▲▲▲ 모션 변경 부분 ▲▲▲
-                
                 frontCard.style.opacity = '0';
                 
-                const newOrder = [...order.slice(1)];
-                newOrder.forEach((cardIndex, stackPosition) => {
-                    const card = cards[cardIndex];
-                    const scale = 1 - stackPosition * 0.15;
-                    const y = -stackPosition * 50;
-                    const z = -stackPosition * 120;
-                    card.style.transform = `translate3d(0px, ${y}px, ${z}px) scale(${scale})`;
-                    card.style.zIndex = cards.length - stackPosition;
-                    card.style.opacity = stackPosition < 3 ? '1' : '0';
-                });
+                // order 배열 업데이트: 맨 앞 요소를 맨 뒤로
+                order.push(order.shift());
 
+                // 잠시 후 카드 위치를 즉시 재설정하고 애니메이션 활성화
                 setTimeout(() => {
-                    order.push(order.shift());
-                    updateCardPositions(true);
-                    isAnimating = false;
-                }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 1000);
+                    updateCardPositions();
+                    setTimeout(() => cardAnimating = false, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 500);
+                }, 200);
             }
 
+            // --- [추가] 스크롤 업 애니메이션 ---
+            function scrollUp() {
+                if (cardAnimating) return;
+                cardAnimating = true;
+
+                // order 배열 업데이트: 맨 뒤 요소를 맨 앞으로
+                order.unshift(order.pop());
+
+                // 새롭게 맨 위가 된 카드를 초기 위치(위쪽)로 즉시 이동
+                const newFrontCard = cards[order[0]];
+                newFrontCard.style.transition = 'none';
+                newFrontCard.style.transform = `translate3d(0, -150%, -200px) rotate(-10deg)`;
+                newFrontCard.style.opacity = '0';
+
+                // 잠시 후, 모든 카드의 위치를 애니메이션과 함께 업데이트
+                setTimeout(() => {
+                    updateCardPositions();
+                    setTimeout(() => {
+                        cardAnimating = false;
+                    }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 500);
+                }, 50);
+            }
+
+            // --- [추가] 카드를 펼치는 애니메이션을 별도 함수로 분리 ---
+            function applyFanAnimation() {
+                order.forEach((cardIndex, stackPosition) => {
+                    const card = cards[cardIndex];
+                    if (!card) return;
+
+                    const totalCards = order.length;
+                    const middleIndex = Math.floor(totalCards / 2);
+                    const positionFromMiddle = stackPosition - middleIndex;
+
+                    const translateX = 60; 
+                    const rotateY = -45;
+                    
+                    // 기본 Y 위치 + 스크롤 오프셋
+                    const baseTranslateY = positionFromMiddle * 115;
+                    const finalTranslateY = baseTranslateY + fanScrollOffset;
+                    
+                    const transformValue = `translateX(${translateX}%) translateY(${finalTranslateY}%) rotateY(${rotateY}deg)`;
+                    const hoverTransformValue = `${transformValue} scale(1.05)`;
+
+                    card.style.transitionDelay = `${stackPosition * 0.05}s`;
+                    card.style.transform = transformValue;
+                    card.style.opacity = '1';
+                    card.style.setProperty('--hover-transform', hoverTransformValue);
+                });
+            }
+
+
+            // --- [수정] 클릭 시 부채꼴 애니메이션 로직 ---
+            stackContainer.addEventListener('click', (e) => {
+                // 카드가 펼쳐진 상태에서 카드 내부의 링크를 클릭한 경우, 다시 쌓이지 않도록 이벤트 전파를 중단
+                if (stackContainer.classList.contains('is-fanned') && e.target.closest('.card-link')) {
+                    return;
+                }
+                const isFanned = stackContainer.classList.toggle('is-fanned');
+
+                if (isFanned) {
+                    fanScrollOffset = 0; // 펼칠 때 스크롤 위치 초기화
+                    applyFanAnimation();
+                } else {
+                    // 다시 쌓는 애니메이션 (기존 위치로 복귀)
+                    cards.forEach(card => {
+                        card.style.transitionDelay = '0s';
+                    });
+                    updateCardPositions();
+                }
+            });
+            
+            // --- [추가] 마우스 휠 이벤트 리스너 ---
+            stackContainer.addEventListener('wheel', (e) => {
+                // [수정] 카드가 펼쳐진 상태에서만 스크롤 애니메이션을 허용
+                if (!stackContainer.classList.contains('is-fanned')) {
+                    return;
+                }
+                e.preventDefault(); // 페이지 전체 스크롤 방지
+
+                // 펼쳐진 상태에서의 스크롤 로직
+                fanScrollOffset += e.deltaY * -0.5; // 스크롤 방향 및 속도 조절
+                applyFanAnimation(); // 변경된 오프셋으로 카드 위치 다시 계산
+
+                /*
+
+                if (e.deltaY < 0) {
+                    // 휠을 위로 올릴 때
+                    scrollUp();
+                } else {
+                    // 휠을 아래로 내릴 때
+                    scrollDown();
+                }
+                */
+            });
+
             updateCardPositions(true);
-            setInterval(swapAnimation, AUTO_SWAP_INTERVAL);
         });
     </script>
 </body>

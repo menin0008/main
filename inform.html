@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>디자이너 프로필 (VW/VH)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1rem = 10px로 설정 */
+        html {
+            font-size: 62.5%;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+            color: #333;
+            overflow: hidden; /* 스크롤바 방지 */
+        }
+
+        /* --- 전체 프로필 카드 --- */
+        .profile-card {
+            display: flex;
+            width: 90vw;
+            height: 80vh;
+            max-width: 120rem;
+            max-height: 80rem;
+            min-height: 40rem;
+            background-color: #ffffff;
+            border-radius: 0.8rem;
+            box-shadow: 0 1rem 3rem rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* --- 1. 왼쪽 정보 컬럼 --- */
+        .info-column {
+            flex: 0 0 40%;
+            padding: 4vmin;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto; 
+        }
+
+        .info-header h1 {
+            font-size: clamp(2.2rem, 2.5vw, 3.2rem);
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            color: #111;
+        }
+
+        .info-header p {
+            font-size: clamp(1.4rem, 1.5vw, 1.6rem);
+            color: #555;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .info-header p a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .info-header p a:hover {
+            color: #007aff;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 3vh 0;
+        }
+        
+        .philosophy-section {
+            font-size: clamp(1.4rem, 1.5vw, 1.6rem);
+            line-height: 1.7;
+        }
+
+        .philosophy-section h3 {
+            font-size: clamp(1.5rem, 1.6vw, 1.8rem);
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 0.5rem;
+        }
+
+        .philosophy-section strong {
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* --- 스킬 섹션 --- */
+        .skills-section {
+            margin-top: auto; 
+        }
+        
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: clamp(1.3rem, 1.4vw, 1.5rem);
+            line-height: 1.8;
+        }
+
+        .skills-list li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .skills-list li a {
+            display: flex;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 0.4rem;
+            transition: background-color 0.2s;
+        }
+        
+        .skills-list li a:hover {
+                background-color: #f9f9f9; 
+        }
+
+        .skills-list .tool-category {
+            flex: 0 0 8rem; 
+            font-weight: 700;
+            color: #111;
+            padding: 0.2rem 0;
+        }
+
+        .skills-list .tool-description {
+            color: #555;
+            padding: 0.2rem 0;
+        }
+
+        /* --- 2. 오른쪽 이미지 컬럼 --- */
+        .image-column {
+            flex: 0 0 60%;
+            background-color: #e0e0e0; /* 이미지 로딩 실패 시 배경색 */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* * .image-placeholder 관련 CSS는 
+         * 더 이상 필요 없으므로 삭제하거나 
+         * img 태그 스타일로 대체합니다. 
+         */
+        
+        /* --- 텍스트 오버레이 --- */
+        .overlay-text {
+            font-family: 'Inter', sans-serif;
+            position: absolute;
+            bottom: 3rem;
+            font-size: clamp(1.6rem, 2vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            color: #000000;
+        }
+        .overlay-text.left {
+            left: 2rem;
+        }
+        .overlay-text.right {
+            right: 3rem;
+        }
+        
+        /* 반응형 (76.8rem = 768px) */
+        @media (max-width: 76.8rem) {
+            .profile-card {
+                flex-direction: column;
+                height: auto; 
+                width: 70vw;
+            }
+            .info-column {
+                order: 2;
+                flex-basis: auto;
+                overflow-y: visible;
+            }
+            .image-column {
+                order: 1;
+                flex-basis: 40vh;
+                min-height: 10rem;
+            }
+        }
+
+        /* 파티클 캔버스 스타일 */
+        #sparkle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* 카드 뒤에 위치 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        
+        <div class="info-column">
+            <!-- 파티클 애니메이션을 위한 캔버스 -->
+    <canvas id="sparkle-canvas"></canvas>
+            
+            <div class="info-header">
+                <h1>[김혜민]</h1>
+                <p>UI/UX Designer & Front-end Developer</p>
+                <p>[010-2143-5471] / <a href="mailto:createhailey@gmail.com">[createhailey@gmail.com]</a></p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="philosophy-section">
+                <h3>Philosophy</h3>
+                <p>
+                    <strong>"새롭게 어울리기를"</strong>
+                    <br>
+                    새로운 기술과 트렌드를 익숙한 경험에 녹여내어, 가장 조화롭고 직관적인 디자인을 만듭니다. 사용자의 공감을 이끌어내는 '새로운 어울림'을 설계합니다.
+                </p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="skills-section">
+                <ul class="skills-list">
+                    <li>
+                        <a href="figma-project.html">
+                            <span class="tool-category">Figma</span>
+                            <span class="tool-description">Expert - 기획, 와이어프레임, 프로토타이핑</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="adobe-project.html">
+                            <span class="tool-category">Adobe CC</span>
+                            <span class="tool-description">Proficient - Ps, Ai, Id를 활용한 그래픽 작업</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="vscode-project.html">
+                            <span class="tool-category">VS Code</span>
+                            <span class="tool-description">Proficient - HTML/CSS/JS 웹 표준 퍼블리싱</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-project.html">
+                            <span class="tool-category">AI Tools</span>
+                            <span class="tool-description">Utilizing - Midjourney, ChatGPT를 활용한 아이데이션</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        
+        <div class="image-column">
+            
+            <img src="img/profile.png" alt="[김혜민] 프로필 사진" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+    <script>
+        // --- 스파클 배경 애니메이션 스크립트 ---
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+        let particles = [];
+        const numParticles = 300; // 파티클 개수 조정
+        // 밝은 배경에 어울리는 어두운 계열 파티클 색상
+        const particleColors = ['#aaaaaa', '#bbbbbb', '#cccccc', '#dddddd'];
+        const mouse = { x: undefined, y: undefined, radius: 120 }; // 마우스 영향 반경
+        class Particle {
+            constructor() {
+                this.baseX = Math.random() * width; this.baseY = Math.random() * height;
+                this.x = this.baseX; this.y = this.baseY;
+                this.size = Math.random() * 2.0 + 0.5; // 파티클 크기
+                this.speedX = 0; this.speedY = 0;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.density = (Math.random() * 20) + 5; // 밀도(반응성)
+            }
+            update() {
+                const dx = mouse.x - this.x; const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const forceDirectionX = dx / distance; const forceDirectionY = dy / distance;
+                const maxDistance = mouse.radius; const force = (maxDistance - distance) / maxDistance;
+                if (distance < mouse.radius) {
+                    this.speedX -= forceDirectionX * force * 0.05 * this.density;
+                    this.speedY -= forceDirectionY * force * 0.05 * this.density;
+                }
+                this.speedX += (this.baseX - this.x) * 0.01; this.speedY += (this.baseY - this.y) * 0.01;
+                this.speedX *= 0.96; this.speedY *= 0.96; // 마찰력
+                this.x += this.speedX; this.y += this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        function handleParticles() { for (const particle of particles) { particle.update(); particle.draw(); } }
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        function initParticles() { for (let i = 0; i < numParticles; i++) { particles.push(new Particle()); } }
+        function animateParticles() { ctx.clearRect(0, 0, width, height); handleParticles(); requestAnimationFrame(animateParticles); }
+        initParticles(); 
+        animateParticles();
+
+        // --- 이미지 더블클릭 이벤트 추가 ---
+        const imageColumn = document.querySelector('.image-column');
+        if (imageColumn) {
+            imageColumn.addEventListener('dblclick', () => { window.location.href = 'main.html'; });
+        }
+    </script>
+</body>
+</html>

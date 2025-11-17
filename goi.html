@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1인 가구 리포트 및 페르소나</title>
+    <title>GOI - 1인 가구 식생활 솔루션</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&display=swap" rel="stylesheet">
+    
     <style>
         /* 1rem = 10px로 설정 */
         html {
             font-size: 62.5%;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -17,17 +20,146 @@
             padding: 0;
             background-color: #ffffff;
             color: #333;
-            font-size: 1.6rem; /* 기본 폰트 크기 16px */
+            font-size: 1.6rem;
             line-height: 1.7;
         }
 
+        /* ========================================
+         1. Cover 섹션 스타일
+        ========================================
+        */
+        .cover-section {
+            height: 100vh;
+            background: linear-gradient(135deg, #7B2BFF 0%, #5A1FFF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cover-content {
+            z-index: 5;
+            position: relative;
+        }
+
+        .cover-subtitle {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 500;
+            letter-spacing: 0.5rem;
+        }
+        
+        .cover-subtitle span {
+            font-weight: 700;
+        }
+
+        .cover-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(10rem, 22vw, 20rem);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            margin: 0;
+            line-height: 1;
+            color: #fff;
+            text-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15);
+        }
+
+        /* ★★★ 수정된 부분 (1/2) ★★★ */
+        /* '임의의 핸드폰 프레임' 스타일 */
+        .cover-mockup-frame {
+            width: clamp(42rem, 25vw, 60rem); /* 1.5배 증가 */
+            height: clamp(44rem, 60vw, 80rem); /* 1.5배 증가 */
+            background-color: #1a004a; /* 어두운 보라색 프레임 */
+            border: 1.5rem solid #333; /* 1.5배 증가 */
+            border-radius: 6rem; /* 1.5배 증가 */
+            padding: 2.25rem; /* 1.5배 증가 */
+            box-sizing: border-box; /* 패딩이 크기에 포함되도록 */
+            
+            box-shadow: 0 2rem 5rem rgba(0,0,0,0.2);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(5deg);
+            opacity: 0.2; /* 텍스트 뒤로 은은하게 */
+            z-index: -1;
+            overflow: hidden; /* 내부 이미지가 모서리를 넘지 않도록 */
+        }
+        
+        /* '핸드폰 프레임' 안에 들어갈 '이미지' 스타일 */
+        .cover-mockup-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3.75rem; /* 1.5배 증가 */
+        }
+        
+        /* 장식 요소 */
+        .deco-char {
+            position: absolute;
+            z-index: 10;
+        }
+        .deco-char.char-1 {
+            width: 15rem;
+            height: 15rem;
+            background: #111;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            bottom: -5rem;
+            left: 5vw;
+            animation: bounce 3s infinite ease-in-out;
+        }
+        .deco-char.char-2 {
+            width: 8rem;
+            height: 8rem;
+            background: #D9BBFF;
+            border-radius: 50%;
+            bottom: 8vh;
+            right: 8vw;
+            animation: bounce 2.5s infinite ease-in-out 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* 스크롤 다운 아이콘 */
+        .scroll-down {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.1em;
+            z-index: 10;
+        }
+        .scroll-down::after {
+            content: '↓';
+            display: block;
+            font-size: 2rem;
+            margin-top: 0.5rem;
+            animation: scroll-bounce 1.5s infinite;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+
+        /* ========================================
+         2. Intro 섹션 스타일
+        ========================================
+        */
         .wrapper {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 5rem 2rem; /* 50px 20px */
+            padding: 8rem 2rem 5rem; /* 상단 패딩 추가 */
         }
 
-        /* --- Intro 섹션 --- */
         .subtitle {
             font-size: 1.4rem;
             font-weight: 700;
@@ -37,7 +169,7 @@
         }
 
         .title {
-            font-size: 3.8rem; /* 38px */
+            font-size: 3.8rem;
             font-weight: 900;
             color: #111;
             margin-bottom: 3rem;
@@ -68,67 +200,50 @@
             margin-bottom: 1rem;
         }
 
-        .text-data ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .text-data li {
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
+        .text-data ul { list-style: none; padding: 0; margin: 0; }
+        .text-data li { margin-bottom: 1rem; font-weight: 500; }
+        .text-data .source { font-size: 1.3rem; color: #888; margin-top: 2rem; display: block; }
 
-        .text-data .source {
-            font-size: 1.3rem;
-            color: #888;
-            margin-top: 2rem;
-            display: block;
-        }
-
-        /* --- 이미지 섹션 --- */
+        /* ========================================
+         3. Visual 섹션 스타일
+        ========================================
+        */
         .visual-section {
             position: relative;
             width: 100%;
-            border-radius: 2rem; /* 20px */
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 2rem;
             overflow: hidden;
             box-shadow: 0 1rem 3rem rgba(0,0,0,0.1);
         }
 
-        /* 클릭 가능한 이미지 링크 영역 */
         .image-link-placeholder {
             display: block;
             width: 100%;
-            height: 50rem; /* 500px */
+            height: 50rem;
             background-color: #333;
-            /* 플레이스홀더 이미지 */
             background-image: url('https://via.placeholder.com/1100x500/50684c/ffffff?text=1%EC%9D%B8+%EA%B0%80%EA%B5%AC+%EC%9D%B4%EB%AF%B8%EC%A7%80+(%EB%A7%81%ED%81%AC)');
             background-size: cover;
             background-position: center;
-            position: relative; /* 오버레이의 기준 */
+            position: relative;
         }
 
-        /* 이미지 위 텍스트 박스 */
         .overlay-box {
             position: absolute;
-            bottom: 3rem; /* 30px */
-            left: 3rem; /* 30px */
-            max-width: 67.5rem; /* 45rem * 1.5 */
+            bottom: 3rem;
+            left: 3rem;
+            max-width: 67.5rem;
             color: #ffffff;
             font-size: 1.7rem;
             font-weight: 500;
             line-height: 1.8;
             text-shadow: 0 0.1rem 0.3rem rgba(0,0,0,0.6);
-            z-index: 10; /* 차트 위에 표시 */
+            z-index: 10;
         }
 
-        /* 텍스트 하이라이트 */
-        .highlight {
-            color: #6effc1; /* 원본의 밝은 녹색 */
-            font-weight: 700;
-        }
+        .highlight { color: #6effc1; font-weight: 700; }
 
-        /* 말풍선 컨테이너 */
         .speech-bubbles {
             position: absolute;
             top: 3rem;
@@ -138,11 +253,11 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 3vh;
-            z-index: 10; /* 차트 위에 표시 */
+            z-index: 10;
         }
 
         .bubble {
-            background-color: #2ecc71; /* 원본의 녹색 */
+            background-color: #2ecc71;
             color: #ffffff;
             padding: 1.5rem 2rem;
             border-radius: 2rem;
@@ -153,7 +268,6 @@
             position: relative;
         }
 
-        /* 말풍선 꼬리 (CSS) */
         .bubble:after {
             content: '';
             position: absolute;
@@ -169,36 +283,28 @@
             margin-bottom: -1rem;
         }
         
-        /* --- 추가된 원형 그래프 스타일 --- */
         .food-cost-chart-container {
             position: absolute;
-            top: 3rem; /* 말풍선과 동일한 y축 */
+            top: 3rem;
             left: 3rem;
-            width: 34.56rem; /* 28.8rem * 1.2 */
-            height: 34.56rem; /* 28.8rem * 1.2 */
+            width: 34.56rem;
+            height: 34.56rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* background-color: rgba(0,0,0,0.6); -- 배경 제거 */
-            border-radius: 2.88rem; /* 2.4rem * 1.2 */
-            padding: 2.88rem; /* 2.4rem * 1.2 */
-            z-index: 15; /* overlay-box 위에 표시 */
+            border-radius: 2.88rem;
+            padding: 2.88rem;
+            z-index: 15;
         }
 
         .food-cost-chart {
             position: relative;
-            width: 23.04rem; /* 19.2rem * 1.2 */
-            height: 23.04rem; /* 19.2rem * 1.2 */
+            width: 23.04rem;
+            height: 23.04rem;
             border-radius: 50%;
-            /* * 식료품비 80만원 / 생활비 213만원 = 약 37.6%
-             * blue: #3498db (식료품비), lightgrey: #e0e0e0 (기타)
-             */
-            background-image: conic-gradient(
-                #3498db 0% 37.6%, 
-                #e0e0e0 37.6% 100%
-            );
-            margin-bottom: 1.92rem; /* 1.6rem * 1.2 */
+            background-image: conic-gradient( #3498db 0% 37.6%, #e0e0e0 37.6% 100% );
+            margin-bottom: 1.92rem;
         }
 
         .chart-hole {
@@ -206,14 +312,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 13.44rem; /* 11.2rem * 1.2 */
-            height: 13.44rem; /* 11.2rem * 1.2 */
-            background-color: rgba(0,0,0,0.7); /* 배경 이미지와 조화롭게 */
+            width: 13.44rem;
+            height: 13.44rem;
+            background-color: rgba(0,0,0,0.7);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.64rem; /* 2.2rem * 1.2 */
+            font-size: 2.64rem;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 0.1rem 0.2rem rgba(0,0,0,0.4);
@@ -221,47 +327,31 @@
         
         .chart-legend {
             display: flex;
-            gap: 1.92rem; /* 1.6rem * 1.2 */
-            font-size: 2.28rem; /* 1.9rem * 1.2 */
+            gap: 1.92rem;
+            font-size: 2.28rem;
             color: #ffffff;
             font-weight: 500;
         }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-        }
-
+        .legend-item { display: flex; align-items: center; }
         .legend-color-box {
-            width: 2.28rem; /* 1.9rem * 1.2 */
-            height: 2.28rem; /* 1.9rem * 1.2 */
+            width: 2.28rem;
+            height: 2.28rem;
             border-radius: 0.3rem;
-            margin-right: 0.96rem; /* 0.8rem * 1.2 */
+            margin-right: 0.96rem;
         }
-
 
         /* ========================================
-        (새로운) Persona 섹션 스타일
+         4. Persona 섹션 스타일
         ========================================
         */
         .persona-section {
-            background-color: #f4f4f4; /* 템플릿의 밝은 회색 배경 */
+            background-color: #f4f4f4;
             padding: 8rem 0;
         }
         
-        /* .wrapper 재사용을 위해 persona-section 내부의 .wrapper에만 적용 */
-        .persona-section .wrapper {
-            padding-top: 0; /* 위에서 wrapper의 padding을 사용했으므로 조정 */
-            padding-bottom: 0;
-        }
-
-        .persona-section .section-subtitle {
-            font-size: 1.6rem;
-            color: #888;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
+        .persona-section .wrapper { padding-top: 0; padding-bottom: 0; }
+        .persona-section .section-subtitle { font-size: 1.6rem; color: #888; font-weight: 500; margin-bottom: 0.5rem; }
         .persona-section .section-title {
             font-size: 4.8rem;
             font-weight: 900;
@@ -271,7 +361,6 @@
             display: inline-block;
         }
 
-        /* 템플릿의 녹색 밑줄 */
         .persona-section .section-title::after {
             content: '';
             position: absolute;
@@ -299,11 +388,7 @@
             flex-direction: column;
         }
 
-        .persona-header {
-            text-align: center;
-            position: relative;
-        }
-
+        .persona-header { text-align: center; position: relative; }
         .persona-tag {
             background-color: #2ecc71;
             color: #fff;
@@ -339,19 +424,8 @@
             border: 4px solid #f0f0f0;
         }
 
-        .persona-name {
-            font-size: 2.4rem;
-            font-weight: 900;
-            color: #111;
-            margin-bottom: 0.5rem;
-        }
-
-        .persona-info {
-            font-size: 1.6rem;
-            color: #555;
-            margin-bottom: 2rem;
-        }
-
+        .persona-name { font-size: 2.4rem; font-weight: 900; color: #111; margin-bottom: 0.5rem; }
+        .persona-info { font-size: 1.6rem; color: #555; margin-bottom: 2rem; }
         .persona-quote-box {
             background-color: #f9f9f9;
             border-radius: 1.5rem;
@@ -374,75 +448,210 @@
         }
 
         .persona-details p,
-        .persona-details li {
-            font-size: 1.5rem;
-            color: #444;
-            line-height: 1.7;
+        .persona-details li { font-size: 1.5rem; color: #444; line-height: 1.7; }
+        .persona-details ul { padding-left: 2rem; margin: 0; }
+        
+        /* ========================================
+         5. Solution 섹션 스타일
+        ========================================
+        */
+        .solution-section {
+            background-color: #f7f8fc;
+            padding: 8rem 0;
         }
         
-        .persona-details ul {
-            padding-left: 2rem;
-            margin: 0;
+        .solution-section .wrapper { padding-top: 0; padding-bottom: 0; max-width: 1200px; }
+        .solution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        
+        .solution-header .header-left { flex-basis: 70%; }
+        .solution-header .portfolio-tag { font-size: 1.4rem; color: #888; font-weight: 500; }
+        .solution-header .title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #111;
+            margin: 0.5rem 0 1rem 0;
+            line-height: 1.3;
         }
 
+        .solution-header .description { font-size: 1.6rem; color: #555; max-width: 60ch; }
+        .solution-header .info-box {
+            flex-shrink: 0;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            font-size: 1.3rem;
+            box-shadow: 0 0.4rem 1rem rgba(0,0,0,0.03);
+        }
+        
+        .info-box .info-row { display: flex; gap: 1.5rem; color: #666; }
+        .info-box .info-row + .info-row { margin-top: 0.8rem; }
+        .info-box .info-row span:first-child { font-weight: 700; color: #333; }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .solution-insight-header {
+            background-color: #5878FF;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 2rem 2rem 0 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .solution-insight-header .icon {
+            width: 2rem;
+            height: 2rem;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+        
+        .solution-insight-card {
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: 0 0 2rem 2rem;
+            box-shadow: 0 0.8rem 2rem rgba(0,0,0,0.05);
+            min-height: 20rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .solution-insight-card .card-title { font-size: 1.8rem; font-weight: 700; color: #222; line-height: 1.5; }
 
-        /* 반응형 */
+        .solution-bubble {
+            background-color: #f7f8fc;
+            border: 1px solid #eef0f4;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            font-size: 1.4rem;
+            color: #444;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .solution-bubble::before {
+            content: '';
+            position: absolute;
+            top: -1rem;
+            left: 2rem;
+            width: 0;
+            height: 0;
+            border-left: 1rem solid transparent;
+            border-right: 1rem solid transparent;
+            border-bottom: 1rem solid #f7f8fc;
+        }
+
+        .solution-opportunity-card {
+            background-color: #5878FF;
+            color: #fff;
+            padding: 2rem;
+            border-radius: 2rem;
+            margin-top: 2rem;
+            font-size: 1.6rem;
+            font-weight: 500;
+            line-height: 1.6;
+            box-shadow: 0 0.5rem 1.5rem rgba(88, 120, 255, 0.3);
+        }
+        
+        .solution-opportunity-card .opportunity-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- 반응형 --- */
         @media (max-width: 1024px) {
-            .persona-grid {
-                grid-template-columns: 1fr; /* 1단으로 변경 */
-            }
+            .intro-text-container { grid-template-columns: 1fr; }
+            .persona-grid { grid-template-columns: 1fr; }
+            .solution-grid { grid-template-columns: 1fr; }
+            .solution-header { flex-direction: column; gap: 2rem; }
         }
         
         @media (max-width: 768px) {
-            .title {
-                font-size: 3rem;
-            }
-            .intro-text-container {
-                grid-template-columns: 1fr;
-            }
-            .speech-bubbles {
-                display: none; /* 모바일에서는 말풍선 숨기기 */
-            }
-            .overlay-box {
-                font-size: 1.5rem;
-                bottom: 2rem;
-                left: 2rem;
-                max-width: 80%;
-            }
+            .title { font-size: 3rem; }
+            .speech-bubbles { display: none; }
+            .overlay-box { font-size: 1.5rem; bottom: 2rem; left: 2rem; max-width: 80%; }
             .food-cost-chart-container {
-                top: 2rem;
-                left: 2rem;
-                width: 15rem; /* 모바일에서 차트 크기 조정 */
-                height: 15rem;
-                padding: 1rem;
+                top: 2rem; left: 2rem; width: 15rem; height: 15rem; padding: 1rem;
             }
-            .food-cost-chart {
-                width: 10rem;
-                height: 10rem;
-            }
-            .chart-hole {
-                width: 6rem;
-                height: 6rem;
-                font-size: 1.2rem;
-            }
-            .chart-legend {
-                font-size: 1rem;
-                gap: 0.5rem;
-            }
-            .legend-color-box {
-                width: 1rem;
-                height: 1rem;
-            }
+            .food-cost-chart { width: 10rem; height: 10rem; }
+            .chart-hole { width: 6rem; height: 6rem; font-size: 1.2rem; }
+            .chart-legend { font-size: 1rem; gap: 0.5rem; }
+            .legend-color-box { width: 1rem; height: 1rem; }
             
-            /* Persona 반응형 스타일 추가 */
-            .persona-section .section-title {
-                font-size: 3.6rem;
-            }
+            .persona-section .section-title { font-size: 3.6rem; }
+            .solution-header .title { font-size: 2.8rem; }
+            .solution-header .info-box { width: 100%; box-sizing: border-box; }
+        }
+
+        /* ========================================
+         6. LOOK 버튼 섹션 스타일
+        ========================================
+        */
+        .look-button-section {
+            padding: 8rem 2rem;
+            background-color: #f7f8fc; /* Solution 섹션과 동일한 배경 */
+            text-align: center;
+        }
+
+        .look-btn {
+            display: inline-block;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            padding: 2rem 8rem;
+            border-radius: 5rem;
+            background: linear-gradient(45deg, #5878FF, #7B2BFF);
+            box-shadow: 0 1rem 2.5rem rgba(88, 120, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            letter-spacing: 0.2rem;
+        }
+
+        .look-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1.5rem 3rem rgba(123, 43, 255, 0.4);
         }
 
     </style>
 </head>
 <body>
+
+    <section class="cover-section">
+        <div class="cover-content">
+            <h2 class="cover-subtitle">식생활을 <span>고이</span> 관리하다</h2>
+            <h1 class="cover-title">GOI</h1>
+            
+            <div class="cover-mockup-frame">
+                <img src="img/goihello2.png" alt="GOI App Mockup">
+            </div>
+        </div>
+
+        <div class="deco-char char-1"></div>
+        <div class="deco-char char-2"></div>
+
+        <div class="scroll-down">
+            SCROLL DOWN
+        </div>
+    </section>
 
     <div class="wrapper">
         <h3 class="subtitle">Intro</h3>
@@ -467,40 +676,40 @@
                 </a>
             </div>
         </div>
-
-        <div class="visual-section">
-            <a href="#" class="image-link-placeholder">
-                
-                <div class="food-cost-chart-container">
-                    <div class="food-cost-chart">
-                        <div class="chart-hole">37.6%</div>
+    </div> <div class="visual-section" style="max-width: 1100px; margin: 0 auto;">
+        <a href="#" class="image-link-placeholder">
+            
+            <div class="food-cost-chart-container">
+                <div class="food-cost-chart">
+                    <div class="chart-hole">37.6%</div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color-box" style="background-color: #3498db;"></span>
+                        식료품비
                     </div>
-                    <div class="chart-legend">
-                        <div class="legend-item">
-                            <span class="legend-color-box" style="background-color: #3498db;"></span>
-                            식료품비
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color-box" style="background-color: #e0e0e0;"></span>
-                            기타
-                        </div>
+                    <div class="legend-item">
+                        <span class="legend-color-box" style="background-color: #e0e0e0;"></span>
+                        기타
                     </div>
                 </div>
+            </div>
 
-                <div class="overlay-box">
-                    청년 가구 월 생활비 213만원 중 <span class="highlight">식료품비가 약 80만원</span>으로 1/3을 차지합니다. 
-                    <br>연 소득 2625만원 대비 생활비 2556만원으로, <span class="highlight">저축 여력이 거의 없는 것</span>이 현실입니다.
-                </div>
+            <div class="overlay-box">
+                청년 가구 월 생활비 213만원 중 <span class="highlight">식료품비가 약 80만원</span>으로 1/3을 차지합니다. 
+                <br>연 소득 2625만원 대비 생활비 2556만원으로, <span class="highlight">저축 여력이 거의 없는 것</span>이 현실입니다.
+            </div>
 
-                <div class="speech-bubbles">
-                    <div class="bubble">배달 한 번 시키면 3만원이 훌쩍 넘어요.</div>
-                    <div class="bubble">장을 봐도 혼자 다 못 먹고 버리는 게 반이에요.</div>
-                    <div class="bubble">월급은 스쳐 지나가고, 식비가 제일 부담돼요.</div>
-                </div>
+            <div class="speech-bubbles">
+                <div class="bubble">배달 한 번 시키면 3만원이 훌쩍 넘어요.</div>
+                <div class="bubble">장을 봐도 혼자 다 못 먹고 버리는 게 반이에요.</div>
+                <div class="bubble">월급은 스쳐 지나가고, 식비가 제일 부담돼요.</div>
+            </div>
 
-            </a>
-        </div>
-    </div> <section class="persona-section">
+        </a>
+    </div>
+
+    <section class="persona-section">
         <div class="wrapper">
             <h3 class="section-subtitle">User Research</h3>
             <h2 class="section-title">Persona</h2>
@@ -606,6 +815,93 @@
             </div>
         </div>
     </section>
+
+    <section class="solution-section">
+        <div class="wrapper">
+            
+            <div class="solution-header">
+                <div class="header-left">
+                    <div class="portfolio-tag">GOI Solution</div>
+                    <h2 class="title">AI 채팅을 통한 식생활 전반의 자동화 관리</h2>
+                    <p class="description">식비를 줄이는 절약, 식생활 개선, 냉장고 관리를 자동화하는 AI 개인 비서 시스템을 제안합니다.</p>
+                </div>
+                <div class="info-box">
+                    <div class="info-row">
+                        <span>Persona</span>
+                        <span>박지은 / 김민준 / 박서윤</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Keywords</span>
+                        <span>AI, 자동화, 절약, 식생활 개선</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-grid">
+                <div class="solution-column">
+                    <div class="solution-insight-header">
+                        <span class="icon"></span>
+                        <span>Insight 1</span>
+                    </div>
+                    <div class="solution-insight-card">
+                        <h3 class="card-title">식재료 관리의 어려움과 낭비</h3>
+                        <div class="solution-bubble">"장을 봐도 혼자 다 못 먹고 버리는 게 반이에요."</div>
+                        <div class="solution-bubble">"냉장고에 뭐가 남았는지 기억이 안 나서 또 사게 돼요."</div>
+                    </div>
+                    <div class="solution-opportunity-card">
+                        <div class="opportunity-title">
+                            <span>💡</span>
+                            <span>Opportunity 1</span>
+                        </div>
+                        AI 기반 냉장고 자동 관리 및 맞춤 레시피를 제공하여 재료 낭비를 원천 차단합니다. (영수증 인식, 보관법/정리법 제공)
+                    </div>
+                </div>
+                
+                <div class="solution-column">
+                    <div class="solution-insight-header">
+                        <span class="icon"></span>
+                        <span>Insight 2</span>
+                    </div>
+                    <div class="solution-insight-card">
+                        <h3 class="card-title">메뉴 결정 스트레스와 장보기의 번거로움</h3>
+                        <div class="solution-bubble">"'오늘 뭐 먹지?' 고민하는 것 자체가 스트레스예요."</div>
+                        <div class="solution-bubble">"가격 비교는 하고 싶은데 여러 마트 돌긴 귀찮아요."</div>
+                    </div>
+                    <div class="solution-opportunity-card">
+                        <div class="opportunity-title">
+                            <span>💡</span>
+                            <span>Opportunity 2</span>
+                        </div>
+                        AI가 식사 범주를 추천하고, 장보기 리스트 생성 및 모든 마트의 최저가 계산을 자동화합니다.
+                    </div>
+                </div>
+
+                <div class="solution-column">
+                    <div class="solution-insight-header">
+                        <span class="icon"></span>
+                        <span>Insight 3</span>
+                    </div>
+                    <div class="solution-insight-card">
+                        <h3 class="card-title">반복적인 정보 관리의 비효율성</h3>
+                        <div class="solution-bubble">"매번 장보기 리스트를 새로 적는 게 일이에요."</div>
+                        <div class="solution-bubble">"지난번에 샀던 리스트를 다시 보고 싶어요."</div>
+                    </div>
+                    <div class="solution-opportunity-card">
+                        <div class="opportunity-title">
+                            <span>💡</span>
+                            <span>Opportunity 3</span>
+                        </div>
+                        채팅으로 생성된 장보기 리스트를 저장/관리하고, '단축어' 연동을 통해 클릭 한 번으로 메모장에 자동 입력합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOOK 버튼 섹션 -->
+    <div class="look-button-section">
+        <a href="https://www.figma.com/design/13lPq9mXFLFzG8wYnifspS/%EB%B0%98%EC%9D%91%ED%98%95-%EC%9B%B9--4%EC%A1%B0?node-id=0-1&t=89DyyDyU2vSxaq1U-1" class="look-btn">LOOK</a>
+    </div>
 
 </body>
 </html>

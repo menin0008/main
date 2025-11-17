@@ -1,0 +1,490 @@
+<!DOCTYPE new html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowing Menu with Nav</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* * 1rem = 10px 로 설정하여 계산을 쉽게 합니다.
+         * (브라우저 기본 16px * 62.5% = 10px)
+         */
+        html {
+            font-size: 62.5%;
+        }
+
+        /* * ========================================
+         * (새로 추가된) 네비게이션 바 CSS 
+         * ========================================
+         */
+        
+        /* --- 메뉴 바를 위한 폰트 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        /* --- 메뉴 바를 위한 Header 스타일 --- */
+        .navbar-sticky {
+            position: fixed; /* 화면 상단에 고정 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* 다른 요소들 위에 표시 */
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+            pointer-events: none; /* 헤더 영역은 클릭 안됨 */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* --- 메뉴 바 스타일 --- */
+        .nav-container {
+            pointer-events: auto; /* 네비 바만 클릭 가능 */
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px 32px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: 0.3s ease;
+        }
+
+        .logo {
+            width: 60px;
+            height: 40px;
+            display: block; 
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 16px; /* 1.6rem */
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            height: 30px; /* 3rem */
+            line-height: 30px;
+            overflow: hidden;
+        }
+
+        .word-shifter {
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .menu-item.is-animating .word-shifter {
+            transform: translateY(-30px); /* 3rem */
+        }
+
+        .visible-word, .hidden-word {
+            display: flex;
+            justify-content: center;
+            height: 30px;
+            white-space: nowrap;
+        }
+
+        .circle-btn {
+            width: 36px; /* 3.6rem */
+            height: 36px; /* 3.6rem */
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px; /* 2rem */
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .circle-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-container:hover { transform: scale(1.03); }
+
+        /* * ========================================
+         * (기존) Flowing Menu CSS
+         * ========================================
+         */
+
+        body {
+            /* Noto Sans KR 폰트를 기본으로 사용 */
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0f0b12;
+            
+            /* 컨테이너를 화면 정중앙에 배치하기 위한 설정 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* 최소 높이를 화면 전체로 */
+            margin: 0;
+            overflow: hidden; /* 화면 스크롤 방지 */
+        }
+
+        /* 메뉴 전체 컨테이너 */
+        .flowing-menu-container {
+            width: 100vw; /* 가로 꽉 채움 */
+            height: 60vh; /* 세로 60% 사용 */
+            
+            background-color: #0f0b12;
+            border-top: 1px solid #333; /* 위아래 경계선만 */
+            border-bottom: 1px solid #333;
+            overflow: hidden;
+
+            /* 내부 ul이 높이를 꽉 채우도록 flex 설정 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flowing-menu-container ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%; /* 부모 높이를 꽉 채움 */
+
+            display: flex;
+            flex-direction: column; /* 메뉴 아이템을 세로로 쌓음 */
+        }
+
+        .flowing-menu-container li {
+            border-bottom: 1px solid #333;
+            flex-grow: 1; /* ★ 4개의 아이템이 높이를 균등하게 나눠 가짐 */
+            position: relative; /* 자식 요소의 기준 */
+        }
+
+        .flowing-menu-container li:last-child {
+            border-bottom: none;
+        }
+
+        .menu-link {
+            display: block;
+            text-decoration: none;
+            position: relative;
+            height: 100%; /* 부모(li)의 높이를 꽉 채움 */
+            width: 100%;
+        }
+
+        /* 1. 기본 상태 (텍스트) */
+        .menu-item-default {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            
+            color: #ffffff;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 2. 호버 상태 (흐르는 흰색 섹션) */
+        .menu-item-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            background-color: #ffffff;
+            
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 3. 호버 시 상태 변경 */
+        .menu-link:hover .menu-item-default {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .menu-link:hover .menu-item-hover {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 4. 마키(흐름) 애니메이션 */
+        .marquee-wrapper {
+            display: flex;
+            width: max-content;
+            animation: flow 15s linear infinite;
+        }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            padding: 0 2.5rem; /* 25px -> 2.5rem */
+            white-space: nowrap;
+        }
+
+        .marquee-item img {
+            width: 7.5rem; /* 15rem의 절반 */
+            height: 4.5rem; /* 9rem의 절반 */
+            border-radius: 1.2rem; 
+            margin-right: 2rem; 
+            object-fit: contain; /* 이미지가 비율을 유지하며 잘리지 않도록 수정 */
+        }
+
+        .marquee-item span {
+            color: #111;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+        }
+
+        /* 흐름 애니메이션 키프레임 (동일) */
+        @keyframes flow {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    
+    <header class="navbar-sticky">
+        <div class="nav-container">
+            <a href="index.html"><img src="img/logo.png" alt="Logo" class="logo"></a>
+            
+            <div class="menu">
+                <div class="menu-item" id="menu-welcome">
+                    <div class="word-shifter">
+                        <div class="visible-word">WELCOME</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-project">
+                    <div class="word-shifter">
+                        <div class="visible-word">PROJECT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+                <div class="menu-item" id="menu-contact">
+                    <div class="word-shifter">
+                        <div class="visible-word">CONTACT</div>
+                        <div class="hidden-word"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="circle-btn">≡</div>
+        </div>
+    </header>
+
+    <div class="flowing-menu-container">
+        <ul>
+            <li>
+                <a href="#" class="menu-link">
+                    <div class="menu-item-default">MOJAVE</div>
+                    
+                    <div class="menu-item-hover">
+                        <div class="marquee-wrapper">
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>Introducing</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>HYE M</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>Introducing</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>HYE M</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>Introducing</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>HYE M</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>Introducing</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/logo.png" alt="dunes">
+                                <span>HYE M</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            
+            <li>
+                <a href="#" class="menu-link">
+                    <div class="menu-item-default">digital AI composite img</div>
+                    <div class="menu-item-hover">
+                        <div class="marquee-wrapper">
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/camera.jpg" alt="dunes">
+                                <span>digital AI composite img</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="menu-link">
+                    <div class="menu-item-default">UI UX GOI</div>
+                    <div class="menu-item-hover">
+                        <div class="marquee-wrapper">
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="img/goi icon.png" alt="dunes">
+                                <span>UI UX GOI</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="menu-link">
+                    <div class="menu-item-default">SEQUOIA</div>
+                    <div class="menu-item-hover">
+                        <div class="marquee-wrapper">
+                            <div class="marquee-item">
+                                <img src="httpsuploads/노트폴리오 - 포트폴리오 (1).jpg/150x90/6a5a4a/ffffff?text=" alt="dunes">
+                                <span>SEQUOIA</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="https://via.placeholder.com/150x90/6a5a4a/ffffff?text=" alt="dunes">
+                                <span>SEQUOIA</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="https://via.placeholder.com/150x90/6a5a4a/ffffff?text=" alt="dunes">
+                                <span>SEQUOIA</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="httpsEimg src="https://via.placeholder.com/150x90/6a5a4a/ffffff?text=" alt="dunes"">
+                                <span>SEQUOIA</span>
+                            </div> 
+                            <div class="marquee-item">
+                                <img src="https://via.placeholder.com/150x90/6a5a4a/ffffff?text=" alt="dunes">
+                                <span>SEQUOIA</span>
+                            </div>
+                            <div class="marquee-item">
+                                <img src="https://via.placeholder.com/150x90/6a5a4a/ffffff?text=" alt="dunes">
+                                <span>SEQUOIA</span>
+                            </div>
+                        </div>
+                    </div> 
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slideDuration = 600;
+            // 호버 시 변경될 단어들
+            const welcomeWords = ['WELCOME', '안녕하세요', 'WELCOME', '환영합니다'];
+            const projectWords = ['PROJECT', 'WORK', 'PROJECT', 'PRODUCT'];
+            const contactWords = ['CONTACT', 'CALLME', 'CONTACT', 'TOUCH'];
+
+            function setupHoverAnimation(elementId, words) {
+                const menuItem = document.getElementById(elementId);
+                if (!menuItem) return;
+                
+                const shifter = menuItem.querySelector('.word-shifter');
+                const visibleWord = menuItem.querySelector('.visible-word');
+                const hiddenWord = menuItem.querySelector('.hidden-word');
+                
+                let currentIndex = 0;
+                let isAnimating = false;
+
+                // 초기 숨겨진 단어 설정
+                hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+
+                menuItem.addEventListener('mouseenter', () => {
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    menuItem.classList.add('is-animating');
+
+                    setTimeout(() => {
+                        currentIndex = (currentIndex + 1) % words.length;
+                        
+                        shifter.style.transition = 'none'; // 애니메이션 잠시 끄기
+                        visibleWord.textContent = words[currentIndex];
+                        menuItem.classList.remove('is-animating');
+                        hiddenWord.textContent = words[(currentIndex + 1) % words.length];
+                        
+                        // DOM 업데이트 후 애니메이션 다시 켜기
+                        setTimeout(() => {
+                            shifter.style.transition = '';
+                            isAnimating = false;
+                        }, 50);
+
+                    }, slideDuration); // CSS transition 시간과 일치
+                });
+            }
+
+            setupHoverAnimation('menu-welcome', welcomeWords);
+            setupHoverAnimation('menu-project', projectWords);
+            setupHoverAnimation('menu-contact', contactWords);
+        });
+    </script>
+
+</body>
+</html>

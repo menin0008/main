@@ -148,10 +148,13 @@
             align-items: center;
         }
 
-        /* * .image-placeholder 관련 CSS는 
-         * 더 이상 필요 없으므로 삭제하거나 
-         * img 태그 스타일로 대체합니다. 
-         */
+        /* --- 이미지 컬럼 안의 이미지 스타일 --- */
+        .image-column img {
+            max-width: 70%;
+            max-height: 100%;
+            object-fit: contain; /* 이미지 비율을 유지하며 잘리지 않도록 함 */
+            display: block;
+        }
         
         /* --- 텍스트 오버레이 --- */
         .overlay-text {
@@ -287,7 +290,7 @@
         
         <div class="image-column">
             
-            <img src="img/profile.png" alt="[김혜민] 프로필 사진" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="img/profile.png" alt="[김혜민] 프로필 사진">
         </div>
     </div>
 

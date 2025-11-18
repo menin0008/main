@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOI & Dict Box Redesign</title> <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <title>GOI & Dict Box Redesign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&display=swap" rel="stylesheet">
     
     <style>
@@ -22,7 +23,7 @@
             font-size: 1.6rem;
             line-height: 1.7;
         }
-        
+
         /* --- 이전 버튼 --- */
         .back-button {
             position: fixed;
@@ -30,14 +31,14 @@
             left: 3rem;
             width: 5rem;
             height: 5rem;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.2); /* 커버 섹션에 어울리게 반투명 흰색 */
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2.5rem;
             font-weight: bold;
-            color: #fff;
+            color: #fff; /* 아이콘 색상 */
             text-decoration: none;
             box-shadow: 0 0.2rem 1rem rgba(0,0,0,0.1);
             backdrop-filter: blur(5px);
@@ -50,8 +51,14 @@
             background-color: rgba(255, 255, 255, 0.4);
         }
 
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8rem 2rem 5rem;
+        }
+
         /* ========================================
-         1. Cover 섹션 (GOI) - 유지
+         1. Cover 섹션 (GOI)
         ========================================
         */
         .cover-section {
@@ -94,14 +101,25 @@
         }
 
         .cover-mockup-frame {
-            width: clamp(142rem, 25vw, 60rem);
-            height: clamp(44rem, 60vw, 80rem);
+            width: clamp(148rem, 20vw, 40rem);
+            height: clamp(56rem, 60vw, 80rem);
             background-color: #1a004a;
-            border: 1.5rem solid #333;
-            border-radius: 6rem;
-            padding: 2.25rem;
-            box-sizing: border-box;
+            border: 1rem solid #333;
+            border-radius: 4rem;
             box-shadow: 0 2rem 5rem rgba(0,0,0,0.2);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(5deg);
+            opacity: 0.2;
+            z-index: -2;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .cover-mockup-image-link {
+            display: block;
+            width: clamp(148rem, 30vw, 40rem); /* 프레임과 동일하게 맞춤 */
+            height: clamp(56rem, 60vw, 80rem);
             position: absolute;
             top: 50%;
             left: 50%;
@@ -109,15 +127,27 @@
             opacity: 0.2;
             z-index: -1;
             overflow: hidden;
+            border-radius: 3rem;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
-        
-        .cover-mockup-frame img {
+
+        .cover-mockup-image-link img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 3.75rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: contain;
+            border-radius: 2.5rem;
         }
         
+        .cover-section:hover .cover-mockup-frame,
+        .cover-section:hover .cover-mockup-image-link {
+            opacity: 0.4;
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
         .deco-char {
             position: absolute;
             z-index: 10;
@@ -171,15 +201,9 @@
 
 
         /* ========================================
-         2. Intro 섹션 스타일 (Dict Box 내용으로 변경)
+         2. Intro 섹션 (Dict Box)
         ========================================
         */
-        .wrapper {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 8rem 2rem 5rem;
-        }
-
         .subtitle {
             font-size: 1.4rem;
             font-weight: 700;
@@ -225,7 +249,7 @@
         .text-data .source { font-size: 1.3rem; color: #888; margin-top: 2rem; display: block; }
 
         /* ========================================
-         3. Visual 섹션 스타일 (Dict Box 내용으로 변경)
+         3. Visual 섹션 (Dict Box)
         ========================================
         */
         .visual-section {
@@ -243,8 +267,7 @@
             width: 100%;
             height: 50rem;
             background-color: #333;
-            /* Dict Box에 어울리는 이미지로 변경 */
-            background-image: url('https://via.placeholder.com/1100x500/c9d6ff/333333?text=Dictionary+Redesign+(Visual)');
+            background-image: url('https://via.placeholder.com/1100x500/dbe4ff/333333?text=Dict+Box+User+Survey+(Visual)');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -278,7 +301,7 @@
         }
 
         .bubble {
-            background-color: #5878FF; /* Dict Box 테마에 맞게 파란색으로 */
+            background-color: #5878FF;
             color: #ffffff;
             padding: 1.5rem 2rem;
             border-radius: 2rem;
@@ -297,7 +320,7 @@
             width: 0;
             height: 0;
             border: 1rem solid transparent;
-            border-top-color: #5878FF; /* 파란색 */
+            border-top-color: #5878FF;
             border-bottom: 0;
             border-right: 0;
             margin-left: -0.5rem;
@@ -324,11 +347,7 @@
             width: 23.04rem;
             height: 23.04rem;
             border-radius: 50%;
-            /* 70% (7/10)로 변경 */
-            background-image: conic-gradient(
-                #3498db 0% 70%, 
-                #e0e0e0 70% 100%
-            );
+            background-image: conic-gradient( #3498db 0% 70%, #e0e0e0 70% 100% );
             margin-bottom: 1.92rem;
         }
 
@@ -352,9 +371,9 @@
         
         .chart-legend {
             display: flex;
-            flex-direction: column; /* 범례를 세로로 변경 */
+            flex-direction: column;
             gap: 1rem;
-            font-size: 2rem; /* 폰트 크기 조정 */
+            font-size: 2rem;
             color: #ffffff;
             font-weight: 500;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
@@ -374,7 +393,7 @@
         */
         
         /* ========================================
-         5. Solution 섹션 스타일 (Dict Box 내용으로 변경)
+         5. Solution 섹션 (Dict Box)
         ========================================
         */
         .solution-section {
@@ -499,20 +518,110 @@
         }
 
         /* ========================================
-         6. Final Mockup Section (새로 추가)
+         6. IA Section (Dict Box)
         ========================================
         */
+        .ia-section {
+            background-color: #ffffff; /* 흰색 배경 */
+            padding: 8rem 0;
+        }
+        
+        .ia-section .wrapper {
+            max-width: 1200px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .ia-section-subtitle {
+            font-size: 1.6rem;
+            color: #888;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .ia-section-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #111;
+            margin-bottom: 4rem;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        .ia-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5단 */
+            gap: 2rem;
+        }
+
+        .ia-header-box {
+            background-color: #DDE5FF; /* 연한 파란색 */
+            color: #0022AA; /* 진한 파란색 텍스트 */
+            font-weight: 700;
+            font-size: 1.6rem;
+            padding: 1.5rem 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .ia-item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        
+        .ia-item {
+            background-color: #f7f8fc;
+            border: 1px solid #eef0f4;
+            color: #333;
+            font-size: 1.4rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            min-height: 4rem; /* 최소 높이 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 강조하는 항목 */
+        .ia-item.highlighted {
+            background-color: #fffbe6;
+            border-color: #ffe58f;
+            font-weight: 500;
+        }
+
+        /* ========================================
+         7. Final Mockup Section (GOI)
+        ========================================
+        */
+        
+        /* ▼▼▼ 수정된 부분 ▼▼▼ */
         .final-mockup-section {
-            background: linear-gradient(135deg, #2A56FF 0%, #0022AA 100%); /* 파란 계열 */
+            /* 네이비 색상(rgba)을 이미지 위에 80% 불투명도로 겹칩니다. */
+            background: linear-gradient(rgba(0, 0, 51, 0.8), rgba(0, 0, 51, 0.8)), 
+                        url('img/dict\ box.png'); /* 여기에 배경 이미지 링크 삽입 */
+            
+            background-size: cover; /* 이미지가 섹션을 꽉 채우도록 */
+            background-position: center center; /* 이미지 중앙 정렬 */
+            background-repeat: no-repeat; /* 이미지 반복 없음 */
+            
             color: #ffffff;
             padding: 8rem 0;
             position: relative;
             overflow: hidden;
         }
+        /* ▲▲▲ 수정된 부분 ▲▲▲ */
         
-        /* .wrapper 재사용 */
         .final-mockup-section .wrapper {
-            max-width: 1200px; /* 레이아웃 확장 */
+            max-width: 1200px;
             padding-top: 0;
             padding-bottom: 0;
             display: flex;
@@ -523,7 +632,7 @@
 
         .final-mockup-left {
             flex: 1;
-            max-width: 45%; /* 45% */
+            max-width: 45%;
             text-align: left;
             z-index: 2;
         }
@@ -539,7 +648,6 @@
             margin-bottom: 2rem;
             box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1);
         }
-        /* 로고 이미지 플레이스홀더 */
         .final-mockup-app-logo img {
             width: 70%;
             height: 70%;
@@ -588,7 +696,6 @@
             line-height: 1.7;
         }
         
-        /* 앱 런처 버튼 (링크) */
         .app-launcher-button {
             display: inline-block;
             text-decoration: none;
@@ -609,29 +716,28 @@
 
         .final-mockup-right {
             flex: 1;
-            max-width: 55%; /* 55% */
+            max-width: 55%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             z-index: 1;
-            min-height: 60rem; /* 최소 높이 설정 */
+            min-height: 60rem;
         }
 
-        /* 폰 목업 이미지 (플레이스홀더) */
         .phone-mockup-placeholder {
-            width: 100%;
-            height: 100%;
-            max-width: 50rem; /* 목업 최대 크기 */
+            width: 1250rem;
+            height: auto;
             position: absolute;
+            transform: translate(-50%, -50%) rotateY(-15deg) rotateX(10deg);
+            top: 50%;
+            left: 50%;
         }
         
         .phone-mockup-placeholder img {
             width: 100%;
             height: auto;
             object-fit: contain;
-            /* 3D 효과 */
-            transform: rotateY(-15deg) rotateX(10deg);
             filter: drop-shadow(0 2.5rem 4rem rgba(0,0,0,0.3));
         }
 
@@ -641,12 +747,8 @@
             .persona-grid { grid-template-columns: 1fr; }
             .solution-grid { grid-template-columns: 1fr; }
             .solution-header { flex-direction: column; gap: 2rem; }
-
-            .final-mockup-section .wrapper {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
+            .ia-grid { grid-template-columns: repeat(3, 1fr); }
+            .final-mockup-section .wrapper { flex-direction: column; align-items: center; text-align: center; }
             .final-mockup-left { max-width: 100%; margin-bottom: 4rem; }
             .final-mockup-app-logo { margin-left: auto; margin-right: auto; }
             .final-mockup-right { width: 100%; max-width: 100%; min-height: 40rem; }
@@ -667,6 +769,9 @@
             .persona-section .section-title { font-size: 3.6rem; }
             .solution-header .title { font-size: 2.8rem; }
             .solution-header .info-box { width: 100%; box-sizing: border-box; }
+            
+            .ia-grid { grid-template-columns: 1fr; }
+            .ia-section-title { font-size: 2.8rem; }
 
             .final-mockup-title { font-size: 3.2rem; }
             .final-mockup-subtitle { font-size: 1.6rem; }
@@ -681,12 +786,13 @@
 
     <section class="cover-section">
         <div class="cover-content">
-            <h2 class="cover-subtitle">가장 똑똑한 <span>한영사전을</span>만나다</h2>
+            <h2 class="cover-subtitle">가장 똑똑한<span>한영사전</span> 을 만나다</h2>
             <h1 class="cover-title">DICT BOX</h1>
             
-            <div class="cover-mockup-frame">
+            <a href="goi-app-details.html" class="cover-mockup-image-link">
                 <img src="img/dict box.png" alt="GOI App Mockup">
-            </div>
+            </a>
+            <div class="cover-mockup-frame"></div>
         </div>
 
         <div class="deco-char char-1"></div>
@@ -719,7 +825,9 @@
                 </a>
             </div>
         </div>
-    </div> <div class="visual-section" style="max-width: 1100px; margin: 0 auto;">
+    </div> 
+    
+    <div class="visual-section" style="max-width: 1100px; margin: 0 auto;">
         <a href="#" class="image-link-placeholder" style="background-image: url('https://via.placeholder.com/1100x500/dbe4ff/333333?text=Dict+Box+User+Survey+(Visual)');">
             
             <div class="food-cost-chart-container">
@@ -834,38 +942,86 @@
         </div>
     </section>
 
+    <section class="ia-section">
+        <div class="wrapper">
+            <h3 class="ia-section-subtitle">Information Architecture</h3>
+            <h2 class="ia-section-title">사용자가 원하는 학습 정보를 쉽게 찾을 수 있도록</h2>
+
+            <div class="ia-grid">
+                <div class="ia-column">
+                    <div class="ia-header-box">메인 화면 (검색)</div>
+                    <ul class="ia-item-list">
+                        <li class="ia-item">검색창</li>
+                        <li class="ia-item highlighted">학습 기능 (신설)</li>
+                        <li class="ia-item">단어장</li>
+                        <li class="ia-item">파생어/숙어</li>
+                        <li class="ia-item">오늘의 단어</li>
+                    </ul>
+                </div>
+                <div class="ia-column">
+                    <div class="ia-header-box">검색 결과 (개선)</div>
+                    <ul class="ia-item-list">
+                        <li class="ia-item highlighted">단어 뜻 (가독성 개선)</li>
+                        <li class="ia-item highlighted">동의어 (구분)</li>
+                        <li class="ia-item highlighted">반의어 (구분)</li>
+                        <li class="ia-item highlighted">예문 (신설)</li>
+                        <li class="ia-item">발음 듣기</li>
+                    </ul>
+                </div>
+                <div class="ia-column">
+                    <div class="ia-header-box">기능 (통합)</div>
+                    <ul class="ia-item-list">
+                        <li class="ia-item">사진 번역</li>
+                        <li class="ia-item">마이크 번역</li>
+                        <li class="ia-item">텍스트 복사 번역</li>
+                    </ul>
+                </div>
+                <div class="ia-column">
+                    <div class="ia-header-box">메뉴 (재정렬)</div>
+                    <ul class="ia-item-list">
+                        <li class="ia-item">설정</li>
+                        <li class="ia-item">개인정보</li>
+                        <li class="ia-item">유료 버전</li>
+                        <li class="ia-item">광고 제거</li>
+                    </ul>
+                </div>
+                <div class="ia-column">
+                    <div class="ia-header-box">팝업 (신규)</div>
+                    <ul class="ia-item-list">
+                        <li class="ia-item highlighted">앱 첫 실행 팝업</li>
+                        <li class="ia-item">언어 설정</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="final-mockup-section">
         <div class="wrapper">
             <div class="final-mockup-left">
                 
                 <div class="final-mockup-app-logo">
-                    <img src="img/goi-logo-icon.png" alt="GOI App Icon">
+                    <img src="img/db icon.png" alt="GOI App Icon">
                 </div>
 
                 <h2 class="final-mockup-title">GOI : 고이</h2>
-                <h3 class="final-mockup-subtitle">1인 가구를 위한 AI 식생활 비서</h3>
+                <h3 class="final-mockup-subtitle">영어 학습자를 위한 번역 서비스</h3>
                 
                 <p class="final-mockup-info">
-                    <strong>프로젝트 기간:</strong> 2025.10 - 2025.11 (4주)<br>
+                    <strong>프로젝트 기간:</strong> 2025.04 - 2025.07 (12주)<br>
                     <strong>기여도:</strong> 기획 100% / 디자인 100% / 개발 100%<br>
                     <strong>사용 툴:</strong> Figma, VS Code (HTML/CSS/JS)
                 </p>
 
                 <h4 class="final-mockup-story-title">Product Story</h4>
                 <p class="final-mockup-story-text">
-                    1인 가구의 가장 큰 고민인 '식비'와 '식재료 낭비' 문제를 해결하고자 했습니다. 'GOI'는 AI가 냉장고를 '고이' 관리해주고, 식단을 '고이' 짜준다는 의미를 담고 있습니다. 사용자가 더 이상 식생활에 스트레스 받지 않고, 자신의 삶에 집중할 수 있도록 돕는 것이 이 프로젝트의 최종 목표입니다.
+                    이번 리디자인의 핵심은 '구조 개편'입니다. 복잡했던 정보 체계를 사용자의 탐색 흐름에 맞춰 완전히 새로 설계하여, 가장 효율적인 동선으로 정보를 습득할 수 있는 사용자 경험을 제공하고자 합니다.
                 </p>
 
-                <a href="https://www.figma.com/design/13lPq9mXFLFzG8wYnifspS/%EB%B0%98%EC%9D%91%ED%98%95-%EC%9B%B9--4%EC%A1%B0?node-id=0-1&t=89DyyDyU2vSxaq1U-1" class="app-launcher-button" target="_blank">
+                <a href="https://www.figma.com/design/ZbC1LqGB8ldQxjZmH6sV8F/UI-dict-box?node-id=89-2&t=RSJAEhKBuXG4vqxE-1" class="app-launcher-button" target="_blank">
                     Figma 프로토타입 보기 →
                 </a>
 
-            </div>
-            
-            <div class="final-mockup-right">
-                <div class="phone-mockup-placeholder">
-                    <img src="img/goi-main-mockup.png" alt="GOI App Main Mockup" class="main-mockup">
-                    </div>
             </div>
         </div>
     </section>

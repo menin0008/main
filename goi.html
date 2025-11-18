@@ -628,16 +628,6 @@
             .solution-header .info-box { width: 100%; box-sizing: border-box; }
         }
 
-        /* ========================================
-         6. LOOK 버튼 섹션 스타일
-        ========================================
-        */
-        .look-button-section {
-            padding: 8rem 2rem;
-            background-color: #f7f8fc; /* Solution 섹션과 동일한 배경 */
-            text-align: center;
-        }
-
         .look-btn {
             display: inline-block;
             text-decoration: none;
@@ -656,6 +646,156 @@
         .look-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 1.5rem 3rem rgba(123, 43, 255, 0.4);
+        }
+
+.final-mockup-section {
+            /* 네이비 색상(rgba)을 이미지 위에 80% 불투명도로 겹칩니다. */
+            background: linear-gradient(rgba(0, 0, 51, 0.8), rgba(0, 0, 51, 0.8)), 
+                        url('img/Artboard\ 2.png'); /* 여기에 배경 이미지 링크 삽입 */
+            
+            background-size: cover; /* 이미지가 섹션을 꽉 채우도록 */
+            background-position: center center; /* 이미지 중앙 정렬 */
+            background-repeat: no-repeat; /* 이미지 반복 없음 */
+            
+            color: #ffffff;
+            padding: 8rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        /* ▲▲▲ 수정된 부분 ▲▲▲ */
+        
+        .final-mockup-section .wrapper {
+            max-width: 1200px;
+            padding-top: 0;
+            padding-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5rem;
+        }
+
+        .final-mockup-left {
+            flex: 1;
+            max-width: 45%;
+            text-align: left;
+            z-index: 2;
+        }
+
+        .final-mockup-app-logo {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 2rem;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1);
+        }
+        .final-mockup-app-logo img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        .final-mockup-title {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .final-mockup-subtitle {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 3rem;
+        }
+
+        .final-mockup-info {
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .final-mockup-info strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .final-mockup-story-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-top: 4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 1rem;
+        }
+
+        .final-mockup-story-text {
+            font-size: 1.6rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.7;
+        }
+        
+        .app-launcher-button {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #ffffff;
+            color: #0022AA;
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 1.5rem 3rem;
+            border-radius: 3rem;
+            margin-top: 3rem;
+            box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .app-launcher-button:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: 0 0.8rem 2.5rem rgba(0,0,0,0.3);
+        }
+
+        .final-mockup-right {
+            flex: 1;
+            max-width: 55%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            min-height: 60rem;
+        }
+
+        .phone-mockup-placeholder {
+            width: 1250rem;
+            height: auto;
+            position: absolute;
+            transform: translate(-50%, -50%) rotateY(-15deg) rotateX(10deg);
+            top: 50%;
+            left: 50%;
+        }
+        
+        .phone-mockup-placeholder img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2.5rem 4rem rgba(0,0,0,0.3));
+        }
+
+        /* --- 반응형 --- */
+        @media (max-width: 1024px) {
+            .intro-text-container { grid-template-columns: 1fr; }
+            .persona-grid { grid-template-columns: 1fr; }
+            .solution-grid { grid-template-columns: 1fr; }
+            .solution-header { flex-direction: column; gap: 2rem; }
+            .ia-grid { grid-template-columns: repeat(3, 1fr); }
+            .final-mockup-section .wrapper { flex-direction: column; align-items: center; text-align: center; }
+            .final-mockup-left { max-width: 100%; margin-bottom: 4rem; }
+            .final-mockup-app-logo { margin-left: auto; margin-right: auto; }
+            .final-mockup-right { width: 100%; max-width: 100%; min-height: 40rem; }
         }
 
     </style>
@@ -927,10 +1067,34 @@
         </div>
     </section>
 
-    <!-- LOOK 버튼 섹션 -->
-    <div class="look-button-section">
-        <a href="https://www.figma.com/design/13lPq9mXFLFzG8wYnifspS/%EB%B0%98%EC%9D%91%ED%98%95-%EC%9B%B9--4%EC%A1%B0?node-id=0-1&t=89DyyDyU2vSxaq1U-1" class="look-btn">LOOK</a>
-    </div>
+<section class="final-mockup-section">
+        <div class="wrapper">
+            <div class="final-mockup-left">
+                
+                <div class="final-mockup-app-logo">
+                    <img src="img/goi icon.png" alt="GOI App Icon">
+                </div>
+
+                <h2 class="final-mockup-title">GOI : 고이</h2>
+                <h3 class="final-mockup-subtitle">1인 가구를 위한 AI 식생활 비서</h3>
+                
+                <p class="final-mockup-info">
+                    <strong>프로젝트 기간:</strong> 2025.08 - 2025.11 (12주) | 팀 프로젝트<br>
+                    <strong>기여도:</strong> 기획 70% / 디자인 70% / 개발 50%<br>
+                    <strong>사용 툴:</strong> Figma, VS Code (HTML/CSS/JS)
+                </p>
+
+                <h4 class="final-mockup-story-title">Product Story</h4>
+                <p class="final-mockup-story-text">
+1인 가구의 가장 큰 고민인 '식비'와 '식재료 낭비' 문제를 해결하고자 했습니다. 'GOI'는 AI가 냉장고를 '고이' 관리해주고, 식단을 '고이' 짜준다는 의미를 담고 있습니다. 사용자가 더 이상 식생활에 스트레스 받지 않고, 자신의 삶에 집중할 수 있도록 돕는 것이 이 프로젝트의 최종 목표입니다.                </p>
+
+                <a href="https://www.figma.com/design/13lPq9mXFLFzG8wYnifspS/%EB%B0%98%EC%9D%91%ED%98%95-%EC%9B%B9--4%EC%A1%B0?node-id=0-1&t=IuebMHWT6qfUYSRr-1" class="app-launcher-button" target="_blank">
+                    Figma 프로토타입 보기 →
+                </a>
+
+            </div>
+        </div>
+    </section>
 
 </body>
 </html>

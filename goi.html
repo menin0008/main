@@ -24,6 +24,33 @@
             line-height: 1.7;
         }
 
+        /* --- 이전 버튼 --- */
+        .back-button {
+            position: fixed;
+            top: 3rem;
+            left: 3rem;
+            width: 5rem;
+            height: 5rem;
+            background-color: rgba(255, 255, 255, 0.2); /* 커버 섹션에 어울리게 반투명 흰색 */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff; /* 아이콘 색상 */
+            text-decoration: none;
+            box-shadow: 0 0.2rem 1rem rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
         /* ========================================
          1. Cover 섹션 스타일
         ========================================
@@ -70,7 +97,7 @@
         /* ★★★ 수정된 부분 (1/2) ★★★ */
         /* '임의의 핸드폰 프레임' 스타일 */
         .cover-mockup-frame {
-            width: clamp(42rem, 25vw, 60rem); /* 1.5배 증가 */
+            width: clamp(142rem, 25vw, 60rem); /* 1.5배 증가 */
             height: clamp(44rem, 60vw, 80rem); /* 1.5배 증가 */
             background-color: #1a004a; /* 어두운 보라색 프레임 */
             border: 1.5rem solid #333; /* 1.5배 증가 */
@@ -635,13 +662,15 @@
 </head>
 <body>
 
+    <a href="main.html" class="back-button" title="이전으로 돌아가기">←</a>
+
     <section class="cover-section">
         <div class="cover-content">
             <h2 class="cover-subtitle">식생활을 <span>고이</span> 관리하다</h2>
             <h1 class="cover-title">GOI</h1>
             
             <div class="cover-mockup-frame">
-                <img src="img/goihello2.png" alt="GOI App Mockup">
+                <img src="img/Artboard 2.png" alt="GOI App Mockup">
             </div>
         </div>
 
